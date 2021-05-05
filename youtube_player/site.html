@@ -9,9 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> 
     <script>
+    	var user_id = "";
+    	var user_id_float = 0.0; 
         $(document).ready(function(){
-            connect();
 
+            connect();
             $("#chat_top_users_block").scroll(function(){
                 $("#chat_top_users_name_block").scrollLeft($("#chat_top_users_block").scrollLeft());
             });
@@ -26,9 +28,9 @@
 		<div id="upper_name_text">Some_Funny_Name</div>
 		<iframe id="youtube_video" width="2000px" height="2000px" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 		<div id="smile_buttons">
-			<button id="but1"><img src="../images/good/1.png" height="100%" onclick="createEl('good')"></button>
+			<button id="but1"><img src="../images/GOOD/1.png" height="100%" onclick="createEl('GOOD')"></button>
 			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="createEl('OMG')"></button>
-			<button id="but3"><img src="../images/angry/1.png" height="100%" onclick="createEl('angry')"></button>
+			<button id="but3"><img src="../images/ANGRY/1.png" height="100%" onclick="createEl('ANGRY')"></button>
 		</div>
 	</div>
 	<div id="chat_background">
@@ -42,8 +44,8 @@
             <div id="chat_top_background_line_2"></div>
 		</div>
 		<div id="chat_input_block">
-			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="createChatMessage_Enter(event)"></input>
-			<button id="chat_button" align="right" onclick="sendName()">
+			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="sendChatMessage_Enter(event)"></input>
+			<button id="chat_button" align="right" onclick="sendChatMessage('asdasdas')">
 				<div id="up_line"></div>
 				<div id="down_line"></div>
 			</button>
@@ -74,25 +76,22 @@
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
+            user_id = my_substring("" + frame);
+            user_id_float = toFloat(user_id);
 
-        // "/topic/room/123/actions" — адрес, который будет проверяться на наличие обновлений.
             stompClient.subscribe('/topic/room/123/actions', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
-            });
-            stompClient.subscribe('/topic/room/123/messages', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
+                JSON.parse(greeting.body);
             });
 
-        // !!! Адреса сабскрайберов ниже чисто тестовые, практической пользы не несут.
-        // "/user/topic/test" — адрес, который будет проверяться на наличие обновлений.
-            stompClient.subscribe('/user/topic/test', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
-            });
-        // "/topic/test" — адрес, который будет проверяться на наличие обновлений.
-            stompClient.subscribe('/topic/test', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
+            stompClient.subscribe('/topic/room/123/chatMessages', function (greeting) {
+            	var message = JSON.parse(greeting.body)["text"];
+            	var sender = JSON.parse(greeting.body)["userId"]; 
+                createMessageFromServer(message, sender);
             });
 
+            stompClient.subscribe('/topic/room/123/joins', function (greeting) {
+                JSON.parse(greeting.body);
+            });
         });
     }
 
@@ -112,18 +111,9 @@
     }
 
     function sendName() {
-    // "/app/testUser" — адрес, на который будут отправляться сообщения.
-    // stompClient.send("/app/test", {}, JSON.stringify({'name': $("#name").val()}));
-
-    // stompClient.send("/app/testUser", {}, JSON.stringify({'name': $("#name").val()}));
-
-    // stompClient.send("/app/room/123/videoAction", {}, JSON.stringify({'text': $("#name").val()}));
         stompClient.send("/app/room/123/chatMessage", {}, JSON.stringify({'text': $("#name").val()}));
     }
 
-    function showGreeting(message) {
-        $("#greetings").append("<tr><td>" + message + "</td></tr>");
-    }
     </script>
 
 	<script defer>
@@ -155,23 +145,40 @@
     			setTimeout(deleteEl, 6300, el); 
             }
 
-            function createChatMessage()
+            function sendChatMessage_Enter(event)
             {
-            	var input = document.getElementById("chat_input");
-            	if (input.value.length == 0) return;
+				if (event.keyCode === 13) {
+                    var input = document.getElementById("chat_input");
+					sendChatMessage();
+    			}
+            }
+
+            function sendChatMessage()
+            {
+            	var boddy3 = document.getElementById("chat_background_messages");
+            	var input3 = document.getElementById("chat_input");
+                sendMessage(input3.value);
+    			input3.value = "";
+    			boddy3.scrollTop = 99999;
+            }
+
+
+            function createMessageFromServer(input_value, sender_id)
+            {
             	var newEl = document.createElement("div");
             	var newSpace = document.createElement("div");
             	var newTopSpace = document.createElement("div");
             	var newSpace2 = document.createElement("div");
             	var newTopSpace2 = document.createElement("div");
-            	if (Math.random() < 0.5)
-            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input.value + "</div></div>";
+            	if (!(user_id == sender_id))
+            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input_value + "</div></div>";
 	       		else
-	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" +input.value+ "</div></div>";
+	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" + input_value + "</div></div>";
             	newSpace.innerHTML = "<div id=\"space_l\"></div>";
             	newTopSpace.innerHTML = "<div id=\"space_r\"></div>";
             	newSpace2.innerHTML = "<div id=\"space_l\"></div>";
             	newTopSpace2.innerHTML = "<div id=\"space_r\"></div>";
+
             	boddy = document.getElementById("chat_background_messages");
        			chat_input = document.getElementById("hmm");
        			boddy.append(newSpace, chat_input);
@@ -179,19 +186,6 @@
     			boddy.append(newEl, chat_input);
     			boddy.append(newSpace2, chat_input);
        			boddy.append(newTopSpace2, chat_input);
-                sendMessage(input.value);
-    			input.value = "";
-    			boddy.scrollTop = 99999;
-            }
-
-            function createChatMessage_Enter(event)
-            {
-				if (event.keyCode === 13) {
-                    var input = document.getElementById("chat_input");
-                    if (input.value == 'user') 
-                        createUser();
-					createChatMessage();
-    			}
             }
 
             function createUser()
@@ -255,7 +249,6 @@
             function changeMenu()
             {
                 document.getElementById("youtube_video");
-
             }
     </script>
 
@@ -267,6 +260,23 @@
             elem.setAttribute('src', localStorage.getItem('comnata_link_youtube'));
             document.getElementById("chat_top_input").value = getCode();
             localStorage.removeItem('comnata_link_youtube');
+        }
+
+        function my_substring(e)
+        {
+        	var result = "";
+        	var j = e.indexOf("-name:") + 6;
+        	for (var i = 0; i < 36; i++) 
+        		result = result + e.charAt(i + j);
+        	return result;
+        }
+
+        function toFloat(str)
+        {
+        	var num = 1;
+        	for (var i = 0; i < str.length; i++) 
+        		num = (num + str.charCodeAt(i) * num) % 10000000.0 + 1;
+        	return num / 10000000.0;
         }
 
         function getCode()
