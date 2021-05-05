@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Comnata</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+
+<body bgcolor="#262c38">
+	
+	<h1 id="bottom_text">COMNATA</h1>
+	<div id="mid_text">ИЛИ</div>
+
+	<button onclick="buttonFunction()" id="button_load">ЗАГРУЗИТЬ</button>
+
+	<input id="textarea" placeholder="Введите ссылку..." rows="1"></input>
+	
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+	<!-- button_.innerHTML -->
+	<script type="text/javascript">
+            function buttonFunction() {
+                var button_ = document.getElementById("button_load");
+                var link = document.getElementById("textarea").value;
+                if (link.indexOf("youtube.com/watch") != -1){
+                	localStorage.setItem('comnata_link_youtube', rightLink('v=', link));
+                	document.location = '../youtube_player/site.html';
+                }
+                else if (link.indexOf("https://www.youtube.com/embed") == 0){
+                	localStorage.setItem('comnata_link_youtube', link);
+                	document.location = '../youtube_player/site.html';
+                }
+                else if (link.indexOf("youtu.be") != -1){
+                	localStorage.setItem('comnata_link_youtube', rightLink('e/', link));
+                	document.location = '../youtube_player/site.html';
+                }
+            }
+
+            function rightLink(e, link)
+            {
+            	link = link + '&';
+            	var n = link.indexOf(e) + e.length;
+            	var rigth_link = '';
+            	while (link.charAt(n) != '&')
+            	{
+            		rigth_link = rigth_link + link.charAt(n);
+            		n += 1;
+            	}
+            	return 'https://www.youtube.com/embed/' + rigth_link;
+            }
+    </script>
+</body>
+</html>

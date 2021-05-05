@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Comnat</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+
+<body onload="function_onload()">
+	<div id="main">
+		<div id="upper_gradient"></div>
+		<div id="bottom_gradient"></div>
+		<div id="upper_name_text">Some_Funny_Name</div>
+		<div id="smile_buttons">
+			<button id="but1"><img src="../images/good/1.png" height="100%" onclick="createEl('good')"></button>
+			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="createEl('OMG')"></button>
+			<button id="but3"><img src="../images/angry/1.png" height="100%" onclick="createEl('angry')"></button>
+		</div>
+	</div>
+	<div id="chat_background">
+		<div id="chat_background_messages"><div id="hmm"></div></div>
+		<div id="chat_top_background">
+			<div id="chat_top_background_line"></div>
+		</div>
+		<div id="chat_input_block">
+			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="createChatMessage_Enter(event)"></input>
+			<button id="chat_button" align="right" onclick="createChatMessage()">
+				<div id="up_line"></div>
+				<div id="down_line"></div>
+			</button>
+		</div>
+	</div>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+	<script defer>
+		var conn = new WebSocket('ws://127.0.0.1:8777');
+		var chat = document.getElementById("chatInput");
+		conn.onopen = function(e) {
+   		 	console.log("Connection established!");
+		};
+
+		conn.onmessage = function(e) {
+			document.getElementById("chat_input").value = e.data;
+		};
+	</script>
+
+	<script defer>
+
+			function deleteEl(el) {
+				var par = el.parentNode;
+  				el.parentNode.removeChild(el);
+  				par.parentNode.removeChild(par);
+  				console.log("succses")
+			}
+
+            function createEl(e) {
+            	var newEl = document.createElement("div");
+            	var num = (Math.floor(Math.random() * 232) % 4 + 1).toString();
+				newEl.innerHTML = "<img id=\"img_smile\" src=\"../images/"+ e + "/" + num + ".png\">";
+       			boddy = document.getElementById("smile_buttons");
+       			but1 = document.getElementById("but1");
+    			boddy.prepend(newEl, but1);
+    			var el = document.getElementById("img_smile");
+    			el.style.left = Math.floor(Math.random() * 75).toString() + "%";
+    			setTimeout(deleteEl, 6300, el); 
+            }
+
+            function createChatMessage()
+            {
+            	var input = document.getElementById("chat_input");
+            	if (input.value.length == 0) return;
+            	var newEl = document.createElement("div");
+            	var newSpace = document.createElement("div");
+            	var newTopSpace = document.createElement("div");
+            	var newSpace2 = document.createElement("div");
+            	var newTopSpace2 = document.createElement("div");
+            	if (Math.random() < 0.5)
+            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input.value + "</div></div>";
+	       		else
+	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" + input.value + "</div></div>";
+            	newSpace.innerHTML = "<div id=\"space_l\"></div>";
+            	newTopSpace.innerHTML = "<div id=\"space_r\"></div>";
+            	newSpace2.innerHTML = "<div id=\"space_l\"></div>";
+            	newTopSpace2.innerHTML = "<div id=\"space_r\"></div>";
+            	boddy = document.getElementById("chat_background_messages");
+       			chat_input = document.getElementById("hmm");
+       			boddy.append(newSpace, chat_input);
+       			boddy.append(newTopSpace, chat_input);
+    			boddy.append(newEl, chat_input);
+    			boddy.append(newSpace2, chat_input);
+       			boddy.append(newTopSpace2, chat_input);
+    			input.value = "";
+    			boddy.scrollTop = 99999;
+            }
+
+            function createChatMessage_Enter(event)
+            {
+				if (event.keyCode === 13) {
+					createChatMessage();
+    			}
+            }
+
+    </script>
+
+    <script>
+    	function function_onload()
+        {
+        	
+        }
+    </script>	
+	<!-- !!!!!!!!!!!!!!!!!!!!!! <div id="chat_text_block"><div id="triangle"></div>chatblock</div>	-->
+	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+</body>
+</html>

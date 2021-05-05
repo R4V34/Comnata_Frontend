@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Comnata</title>
+	<link rel="stylesheet" href="main.css">
+    <script type="text/javascript" src="../jquery/jquery-1.4.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> 
+    <script>
+        $(document).ready(function(){
+            connect();
+
+            $("#chat_top_users_block").scroll(function(){
+                $("#chat_top_users_name_block").scrollLeft($("#chat_top_users_block").scrollLeft());
+            });
+        });
+    </script>
+</head>
+
+<body onload="function_onload()">
+	<div id="main">
+		<div id="upper_gradient"></div>
+		<div id="bottom_gradient"></div>
+		<div id="upper_name_text">Some_Funny_Name</div>
+		<iframe id="youtube_video" width="2000px" height="2000px" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		<div id="smile_buttons">
+			<button id="but1"><img src="../images/good/1.png" height="100%" onclick="createEl('good')"></button>
+			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="createEl('OMG')"></button>
+			<button id="but3"><img src="../images/angry/1.png" height="100%" onclick="createEl('angry')"></button>
+		</div>
+	</div>
+	<div id="chat_background">
+		<div id="chat_background_messages"><div id="hmm"></div></div>
+		<div id="chat_top_background">
+            <div id="chat_top_users_name_block"><div id="hmm3"></div></div>
+            <div id="chat_top_users_block"><div id="hmm2"></div></div>
+			<div id="chat_top_background_line_1"></div>
+            <input id="chat_top_input"></input>
+            <button id="chat_top_button" onclick="changeMenu()">Расширенные настройки</button>
+            <div id="chat_top_background_line_2"></div>
+		</div>
+		<div id="chat_input_block">
+			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="createChatMessage_Enter(event)"></input>
+			<button id="chat_button" align="right" onclick="sendName()">
+				<div id="up_line"></div>
+				<div id="down_line"></div>
+			</button>
+		</div>
+	</div>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+	<script defer>
+		/*
+        var conn = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws');
+		var chat = document.getElementById("chatInput");
+		conn.onopen = function(e) {
+   		 	console.log("Connection established!");
+		};
+		conn.onmessage = function(e) {
+			document.getElementById("chat_input").value = e.data;
+		};
+        */
+	</script>
+
+    <script>
+    let stompClient = null;
+
+    function connect() {
+        let socket = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws'); 
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+
+        // "/topic/room/123/actions" — адрес, который будет проверяться на наличие обновлений.
+            stompClient.subscribe('/topic/room/123/actions', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
+            stompClient.subscribe('/topic/room/123/messages', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
+
+        // !!! Адреса сабскрайберов ниже чисто тестовые, практической пользы не несут.
+        // "/user/topic/test" — адрес, который будет проверяться на наличие обновлений.
+            stompClient.subscribe('/user/topic/test', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
+        // "/topic/test" — адрес, который будет проверяться на наличие обновлений.
+            stompClient.subscribe('/topic/test', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
+
+        });
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function sendMessage(str)
+    {
+        var mes = JSON.stringify({'text': str});
+        stompClient.send("/app/room/123/chatMessage", {}, mes);
+    }
+
+    function sendName() {
+    // "/app/testUser" — адрес, на который будут отправляться сообщения.
+    // stompClient.send("/app/test", {}, JSON.stringify({'name': $("#name").val()}));
+
+    // stompClient.send("/app/testUser", {}, JSON.stringify({'name': $("#name").val()}));
+
+    // stompClient.send("/app/room/123/videoAction", {}, JSON.stringify({'text': $("#name").val()}));
+        stompClient.send("/app/room/123/chatMessage", {}, JSON.stringify({'text': $("#name").val()}));
+    }
+
+    function showGreeting(message) {
+        $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    }
+    </script>
+
+	<script defer>
+
+            var col1 = ["#78FFB2", "#95CCFF", "#EAB2FF", "#FFE26D"];
+            var col2 = ["#16A57A" , "#0C6FCA", "#B144DB", "#FF8A00"];
+            var smiles = [":)", ":D", ":*", ":|", ":<", ":O", "В)", "O_O", "p-q", "^-^", "-_-", "+_+",
+                           "(:", "D:", "i-i"];
+            var names = ["dog", "cat", "bat", "ace", "ant", "bee", "bug", "cow", "hen", "egg", "elf", 
+                         "fox", "ham", "jar", "jam", "key", "map", "nil", "nut", "owl", "pea", "rat", 
+                         "sun", "tea", "toy", "zoo"];
+
+            var num = [];
+			function deleteEl(el) {
+				var par = el.parentNode;
+  				el.parentNode.removeChild(el);
+  				par.parentNode.removeChild(par);
+			}
+
+            function createEl(e) {
+            	var newEl = document.createElement("div");
+            	var num = (Math.floor(Math.random() * 232) % 4 + 1).toString();
+				newEl.innerHTML = "<img id=\"img_smile\" src=\"../images/"+ e + "/" + num + ".png\">";
+       			boddy = document.getElementById("smile_buttons");
+       			but1 = document.getElementById("but1");
+    			boddy.prepend(newEl, but1);
+    			var el = document.getElementById("img_smile");
+    			el.style.left = Math.floor(Math.random() * 75).toString() + "%";
+    			setTimeout(deleteEl, 6300, el); 
+            }
+
+            function createChatMessage()
+            {
+            	var input = document.getElementById("chat_input");
+            	if (input.value.length == 0) return;
+            	var newEl = document.createElement("div");
+            	var newSpace = document.createElement("div");
+            	var newTopSpace = document.createElement("div");
+            	var newSpace2 = document.createElement("div");
+            	var newTopSpace2 = document.createElement("div");
+            	if (Math.random() < 0.5)
+            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input.value + "</div></div>";
+	       		else
+	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" +input.value+ "</div></div>";
+            	newSpace.innerHTML = "<div id=\"space_l\"></div>";
+            	newTopSpace.innerHTML = "<div id=\"space_r\"></div>";
+            	newSpace2.innerHTML = "<div id=\"space_l\"></div>";
+            	newTopSpace2.innerHTML = "<div id=\"space_r\"></div>";
+            	boddy = document.getElementById("chat_background_messages");
+       			chat_input = document.getElementById("hmm");
+       			boddy.append(newSpace, chat_input);
+       			boddy.append(newTopSpace, chat_input);
+    			boddy.append(newEl, chat_input);
+    			boddy.append(newSpace2, chat_input);
+       			boddy.append(newTopSpace2, chat_input);
+                sendMessage(input.value);
+    			input.value = "";
+    			boddy.scrollTop = 99999;
+            }
+
+            function createChatMessage_Enter(event)
+            {
+				if (event.keyCode === 13) {
+                    var input = document.getElementById("chat_input");
+                    if (input.value == 'user') 
+                        createUser();
+					createChatMessage();
+    			}
+            }
+
+            function createUser()
+            {
+                num.push(getNumber());
+
+                var newEl = document.createElement("div");
+                var newSpace = document.createElement("div");
+                var newSpace2 = document.createElement("div");
+                newSpace2.innerHTML = "<div id=\"chat_top_user_space\"></div>"
+                newSpace.innerHTML = "<div id=\"chat_top_user_space\"></div>";
+                newEl.innerHTML = "<div class=\"chat_top_user\">" + getSmile() + "</div>";
+                boddy = document.getElementById("chat_top_users_block");
+                chat_input = document.getElementById("hmm2");
+                boddy.prepend(newSpace2, chat_input);
+                boddy.prepend(newEl, chat_input);
+                newEl = document.getElementsByClassName("chat_top_user")[0];
+                newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
+                boddy.prepend(newSpace, chat_input);
+
+                var newEl2 = document.createElement("div");
+                var newSpace3 = document.createElement("div");
+                var newSpace4 = document.createElement("div");
+                newSpace4.innerHTML = "<div id=\"chat_top_user_space\"></div>"
+                newSpace3.innerHTML = "<div id=\"chat_top_user_space\"></div>";
+                newEl2.innerHTML = "<div id=\"chat_top_user_name\">" + getName(num[num.length - 1]) + "</div>";
+                var boddy2 = document.getElementById("chat_top_users_name_block");
+                var chat_input2 = document.getElementById("hmm3");
+                boddy2.prepend(newSpace4, chat_input2);
+                boddy2.prepend(newEl2, chat_input2);
+                //newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
+                boddy2.prepend(newSpace3, chat_input2);
+            }
+
+            function getColors() /* ЦВЕТА ДЛЯ БЛОКА */
+            {
+                var i = Math.floor(num[num.length - 1] * col1.length);
+                return col1[i] + " 0%, " + col2[i];
+            }
+
+            function getSmile()
+            {
+                var i = Math.floor(num[num.length - 1] * smiles.length);
+                return smiles[i];
+            }
+
+            function getName(num)
+            {
+                var i = names[Math.floor(num * names.length)] + "_" +
+                        (Math.floor(num * 10)) + 
+                        (Math.floor(num * 100) % 10) +
+                        (Math.floor(num * 1000) % 10);
+                return i;
+            }
+
+            function getNumber()
+            {
+                return Math.random();
+            }
+
+            function changeMenu()
+            {
+                document.getElementById("youtube_video");
+
+            }
+    </script>
+
+    <script>
+    	function function_onload()
+        {
+        	console.log(localStorage.getItem('comnata_link_youtube'));
+			var elem = document.getElementById("youtube_video");
+            elem.setAttribute('src', localStorage.getItem('comnata_link_youtube'));
+            document.getElementById("chat_top_input").value = getCode();
+            localStorage.removeItem('comnata_link_youtube');
+        }
+
+        function getCode()
+        {
+            if (true) /* Проверяем, заходит или создаёт комнату */
+            {
+                /* Получаем новый код при запуске комнаты*/
+                return "aG3Jhd2o";
+            }
+            else
+            {
+                /* Получаем код при заходе в существующиую комнату */
+            }
+        }
+    </script>	
+
+	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+</body>
+</html>

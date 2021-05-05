@@ -1,0 +1,78 @@
+
+#bottom_text
+{
+	position: fixed;
+    text-align: center;
+    width: 133px;
+    height: 18px;
+	bottom: 0; left: 0;
+	resize: none;
+	padding-bottom: 1%;
+    color: #545765;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    width: 100%; 
+	outline: none;
+}
+
+#button_load
+{
+	outline: none;
+	font-size: 12px;
+	width: 149px;
+	height: 51px;
+	position: absolute;
+	font-family: 'Montserrat', sans-serif;
+	color: #fff;
+	background: linear-gradient(to top, #737786, #4A4D65);
+	border-radius: 14px;
+	border: 0;
+	left: 50%;
+	top: 59.45%;
+	transform: translateX(-50%);
+}
+
+#button_load:active 
+{
+  background: linear-gradient(to top, #4A4D65, #737786);
+  transition: background 0s;
+}
+
+#mid_text
+{
+	font-size: 12px;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	top: 54.629%;
+	transform: translate(0, -50%);
+	font-family: 'Montserrat', sans-serif;
+	color: #fff;
+	text-align: center;
+    color: #545765;
+    font-size: 12px;
+}
+
+#textarea
+{
+	outline: none;
+	height: 22px;
+	resize: none;
+	white-space: nowrap;
+	position: absolute;
+	left: 50%;
+	top: 45.5%;
+	transform: translate(-50%,-50%);
+	width: 694px;
+	background: linear-gradient(to top, #434553
+, #333642);
+	text-align: center;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 11px;
+	color: #8D9299;
+	border: 0;
+	border-radius: 8px;
+}
+
+
