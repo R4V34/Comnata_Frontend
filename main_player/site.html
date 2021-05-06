@@ -36,14 +36,14 @@
         <div id="background_video_player"></div>
         <div id="upper_gradient"></div>
         <div id="bottom_gradient"></div>
-		<div id="video_player_block"><video id="video_player"></video></div>
+		<div id="video_player_block"><video loop muted id="video_player"></video></div>
         <div id="video_player_left_block">
             <div id="video_player_play"><img id="img_video" src="../images/buttons/play_button.svg"><div id="action_button" onclick="playing()"></div></div>
             <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg"><div id="action_button" onclick="changeTime(-5)"></div></div>
             <div id="video_player_right"><img id="img_video" src="../images/buttons/right_button.svg"><div id="action_button" onclick="changeTime(5)"></div></div>
         </div> 
         <div id="video_player_polzunok_block">
-            <input id="video_player_polzunok" class="slider" type="range" min="0" max="1000000" value="0" oninput="onPolzunok()" onchange="downPolzunok()" />  
+            <input id="video_player_polzunok" class="slider" type="range" min="0" max="1000000" value="0" oninput="onPolzunok()" onchange="downPolzunok()" >  
         </div>
         <div id="video_player_fullscreen"><img id="img_video" src="../images/buttons/fullscreen_button.svg"><div id="action_button" onclick="fullScreen()"></div></div>
         <div id="video_player_quality"><img id="img_video" src="../images/buttons/settings_button.svg"></div>
@@ -100,8 +100,12 @@
             user_id = my_substring("" + frame);
             user_id_float = toFloat(user_id);
 
-            stompClient.subscribe('/topic/room/123/actions', function (greeting) {
-                JSON.parse(greeting.body);
+            stompClient.subscribe('/topic/room/123/videoActions', function (greeting) {
+                var t = JSON.parse(greeting.body)["type"];
+                if (t == "RESUME")
+                    playing_func();
+                if (t == "SEEK")
+                    changePolsunok(JSON.parse(greeting.body)["seekTime"])
             });
 
             stompClient.subscribe('/topic/room/123/reactions', function (greeting) {
@@ -146,6 +150,12 @@
     function sendUser()
     {
         stompClient.send("/app/room/123/join", {}, "{}");
+    }
+
+    function sendAction(sec, str)
+    {
+        var act = JSON.stringify({'seekTime' : sec, "type" : str});
+        stompClient.send("/app/room/123/videoAction", {}, act);
     }
 
     </script>
@@ -379,20 +389,29 @@
     {
         var line = document.getElementById("video_player_polzunok");
         on_polzunok = false;
-        video.currentTime = (video.duration) * (line.value / 1000000.0);
+        sendAction(video.duration * line.value / 1000000.0, "SEEK");
         if (!video.paused) interval = window.setInterval(myCallback, 500);
     }
 
+    function changePolsunok(sec)
+    {
+        var line = document.getElementById("video_player_polzunok");
+        video.currentTime = sec;
+        line.value = sec / video.duration * 1000000;
+
+    }
 
     function changeTime(sec)
     {
-        var line = document.getElementById("video_player_polzunok");
-        var num = Math.floor(sec / video.duration * 1000000);
-        line.setAttribute('value', parseInt(line.getAttribute('value')) + num);
-        video.currentTime = Math.max(Math.min(video.currentTime + sec, video.duration), 0);
+       sendAction(video.currentTime + sec, "SEEK");
     }
 
     function playing()
+    {
+        sendAction(video.currentTime, "RESUME");
+    }
+
+    function playing_func()
     {
         if (video.paused) 
         {
