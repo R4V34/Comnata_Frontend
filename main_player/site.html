@@ -17,7 +17,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-
     	var user_id = "";
     	var user_id_float = 0.0;
 
@@ -30,7 +29,7 @@
     </script>
 </head>
 
-<body onload="function_onload()">
+<body>
 	<div id="main">
 		<div id="upper_name_text">Some_Funny_Name</div>
         <div id="background_video_player"></div>
@@ -96,9 +95,11 @@
         let socket = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws'); 
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
             user_id = my_substring("" + frame);
             user_id_float = toFloat(user_id);
+            num.push(user_id_float);
+            createUser(user_id_float);
+            sendUser();
 
             stompClient.subscribe('/topic/room/123/videoActions', function (greeting) {
                 var t = JSON.parse(greeting.body)["type"];
@@ -111,17 +112,19 @@
             stompClient.subscribe('/topic/room/123/reactions', function (greeting) {
                 var em = JSON.parse(greeting.body)["type"];
                 var sender = JSON.parse(greeting.body)["author"]; 
-                if (sender != user_id) createEmotion(em);
+                if (sender != user_id) createEmotion(em, toFloat(sender));
             });
 
             stompClient.subscribe('/topic/room/123/chatMessages', function (greeting) {
             	var message = JSON.parse(greeting.body)["text"];
             	var sender = JSON.parse(greeting.body)["userId"]; 
-                if (sender != user_id) createMessageFromServer(message, sender);
+                if (sender != user_id) createMessageFromServer(message, toFloat(sender));
             });
 
             stompClient.subscribe('/topic/room/123/joins', function (greeting) {
-                console.log(JSON.parse(greeting.body));
+                num.push(toFloat(JSON.parse(greeting.body)["userId"]));
+                console.log(num);
+                if (JSON.parse(greeting.body)["userId"] != user_id) createUserWithoutParam();
             });
         });
     }
@@ -157,13 +160,9 @@
         var act = JSON.stringify({'seekTime' : sec, "type" : str});
         stompClient.send("/app/room/123/videoAction", {}, act);
     }
-
     </script>
 
 	<script defer>
-
-            var col1 = ["#78FFB2", "#95CCFF", "#EAB2FF", "#FFE26D"];
-            var col2 = ["#16A57A" , "#0C6FCA", "#B144DB", "#FF8A00"];
             var smiles = [":)", ":D", ":*", ":|", ":<", ":O", "В)", "O_O", "p-q", "^-^", "-_-", "+_+",
                            "(:", "D:", "i-i"];
             var names = ["dog", "cat", "bat", "ace", "ant", "bee", "bug", "cow", "hen", "egg", "elf", 
@@ -181,10 +180,10 @@
 			function sendEmotion(e)
 			{
 				sendReaction(e);
-				createEmotion(e);
+				createEmotion(e, user_id_float);
 			}
 
-            function createEmotion(e) {
+            function createEmotion(e, float_id) {
             	var newEl = document.createElement("div");
             	var num = (Math.floor(Math.random() * 232) % 4 + 1).toString();
 				newEl.innerHTML = "<img id=\"img_smile\" src=\"../images/"+ e + "/" + num + ".png\">";
@@ -193,6 +192,7 @@
     			boddy.prepend(newEl, but1);
     			var el = document.getElementById("img_smile");
     			el.style.left = Math.floor(Math.random() * 75).toString() + "%";
+                el.style.backgroundColor = getColor1(float_id);
     			setTimeout(deleteEl, 6300, el); 
             }
 
@@ -210,7 +210,7 @@
             	var input3 = document.getElementById("chat_input");
                 if (input3.value.length > 0)
                 {
-                	createMessageFromServer(input3.value, user_id);
+                	createMessageFromServer(input3.value, user_id_float);
                 	sendMessage(input3.value);
     				input3.value = "";
     				boddy3.scrollTop = 99999;
@@ -220,15 +220,21 @@
 
             function createMessageFromServer(input_value, sender_id)
             {
+                var sup_string = "";
             	var newEl = document.createElement("div");
             	var newSpace = document.createElement("div");
             	var newTopSpace = document.createElement("div");
             	var newSpace2 = document.createElement("div");
             	var newTopSpace2 = document.createElement("div");
-            	if (!(user_id == sender_id))
+            	if (!(user_id_float == sender_id))
+                {
             		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input_value + "</div></div>";
-	       		else
+                    sup_string = "chat_text_block";
+                }
+	       		else{
 	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" + input_value + "</div></div>";
+                    sup_string = "chat_text_block_ANOTHER";
+                }
             	newSpace.innerHTML = "<div id=\"space_l\"></div>";
             	newTopSpace.innerHTML = "<div id=\"space_r\"></div>";
             	newSpace2.innerHTML = "<div id=\"space_l\"></div>";
@@ -236,79 +242,87 @@
 
             	boddy = document.getElementById("chat_background_messages");
        			chat_input = document.getElementById("hmm");
-       			boddy.append(newSpace, chat_input);
-       			boddy.append(newTopSpace, chat_input);
-    			boddy.append(newEl, chat_input);
-    			boddy.append(newSpace2, chat_input);
-       			boddy.append(newTopSpace2, chat_input);
+       			boddy.prepend(newSpace, chat_input);
+       			boddy.prepend(newTopSpace, chat_input);
+    			boddy.prepend(newEl, chat_input);
+                var changeColor = document.getElementById(sup_string);
+                changeColor.style.backgroundColor = getColor2(sender_id);
+    			boddy.prepend(newSpace2, chat_input);
+       			boddy.prepend(newTopSpace2, chat_input);
             }
 
-            function createUser()
+            function createUserWithoutParam()
             {
-                num.push(getNumber());
+                console.log("!!" + num[num.length - 1])
+                createUser(num[num.length - 1]);
+            }
+
+            function createUser(e)
+            {
                 var newEl = document.createElement("div");
                 var newSpace = document.createElement("div");
                 var newSpace2 = document.createElement("div");
                 newSpace2.innerHTML = "<div id=\"chat_top_user_space\"></div>"
                 newSpace.innerHTML = "<div id=\"chat_top_user_space\"></div>";
-                newEl.innerHTML = "<div class=\"chat_top_user\">" + getSmile() + "</div>";
+                newEl.innerHTML = "<div class=\"chat_top_user\">" + getSmile(e) + "</div>";
                 boddy = document.getElementById("chat_top_users_block");
                 chat_input = document.getElementById("hmm2");
                 boddy.prepend(newSpace2, chat_input);
                 boddy.prepend(newEl, chat_input);
                 newEl = document.getElementsByClassName("chat_top_user")[0];
-                newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
+                var colorStr = 'linear-gradient(135deg, ' + getColor1(e)  + ' 0%, ' + getColor2(e) + ' 100%)';
+                newEl.style.background = colorStr;
                 boddy.prepend(newSpace, chat_input);
                 var newEl2 = document.createElement("div");
                 var newSpace3 = document.createElement("div");
                 var newSpace4 = document.createElement("div");
                 newSpace4.innerHTML = "<div id=\"chat_top_user_space\"></div>"
                 newSpace3.innerHTML = "<div id=\"chat_top_user_space\"></div>";
-                newEl2.innerHTML = "<div id=\"chat_top_user_name\">" + getName(num[num.length - 1]) + "</div>";
+                newEl2.innerHTML = "<div id=\"chat_top_user_name\">" + getName(e) + "</div>";
                 var boddy2 = document.getElementById("chat_top_users_name_block");
                 var chat_input2 = document.getElementById("hmm3");
                 boddy2.prepend(newSpace4, chat_input2);
                 boddy2.prepend(newEl2, chat_input2);
-                //newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
                 boddy2.prepend(newSpace3, chat_input2);
             }
 
-            function getColors() /* ЦВЕТА ДЛЯ БЛОКА */
+            function getColor1(e) 
             {
-                var i = Math.floor(num[num.length - 1] * col1.length);
-                return col1[i] + " 0%, " + col2[i];
+                var r = (Math.floor(parseFloat(e) * 100) * 2312424) % 200 + 55;
+                var g = (Math.floor(parseFloat(e) * 10000) * 2334533) % 200 + 55;
+                var b = (Math.floor(parseFloat(e) * 1000000) * 2154523) % 200 + 55;
+
+                return "rgb("+ r +", "+ g +", "+ b +")";
+                return arr;
             }
 
-            function getSmile()
+            function getColor2(e)
             {
-                var i = Math.floor(num[num.length - 1] * smiles.length);
+                var r = (Math.floor(parseFloat(e) * 100) * 2312424) % 200 + 55;
+                var g = (Math.floor(parseFloat(e) * 10000) * 2334533) % 200 + 55;
+                var b = (Math.floor(parseFloat(e) * 1000000) * 2154523) % 200 + 55;
+
+                return "rgb("+ Math.floor(r * 0.55) +", "+ Math.floor(g * 0.55)  +", "+ Math.floor(b * 0.55)  +")";
+            }
+
+            function getSmile(e)
+            {
+                var i = Math.floor(parseFloat(e) * smiles.length);
                 return smiles[i];
             }
 
-            function getName(num)
+            function getName(e)
             {
-                var i = names[Math.floor(num * names.length)] + "_" +
-                        (Math.floor(num * 10)) + 
-                        (Math.floor(num * 100) % 10) +
-                        (Math.floor(num * 1000) % 10);
+                var i = names[Math.floor(parseFloat(e) * names.length)] + "_" +
+                        (Math.floor(parseFloat(e) * 10)) + 
+                        (Math.floor(parseFloat(e) * 100) % 10) +
+                        (Math.floor(parseFloat(e) * 1000) % 10);
                 return i;
             }
 
-            function getNumber()
-            {
-                return Math.random();
-            }
-
-            function changeMenu()
-            {
-            }
     </script>
 
     <script>
-    	function function_onload()
-        {
-			
-        }
 
         function my_substring(e)
         {
@@ -323,8 +337,8 @@
         {
         	var num = 1;
         	for (var i = 0; i < str.length; i++) 
-        		num = (num + str.charCodeAt(i) * num) % 10000000.0 + 1;
-        	return num / 10000000.0;
+        		num = (num + str.charCodeAt(i) * num) % 1000000000.0 + 1;
+        	return num / 1000000000.0;
         }
 
         function getCode()
@@ -338,6 +352,11 @@
             {
                 /* Получаем код при заходе в существующиую комнату */
             }
+        }
+
+        function getColors(num)
+        {
+            var r = Math.random();
         }
     </script>	
 
