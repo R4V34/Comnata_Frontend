@@ -36,7 +36,7 @@
         <div id="background_video_player"></div>
         <div id="upper_gradient"></div>
         <div id="bottom_gradient"></div>
-		<div id="video_player_block"><video loop muted id="video_player"></video></div>
+		<div id="video_player_block"><video loop muted="muted" id="video_player"></video></div>
         <div id="video_player_left_block">
             <div id="video_player_play"><img id="img_video" src="../images/buttons/play_button.svg"><div id="action_button" onclick="playing()"></div></div>
             <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg"><div id="action_button" onclick="changeTime(-5)"></div></div>
@@ -49,9 +49,9 @@
         <div id="video_player_quality"><img id="img_video" src="../images/buttons/settings_button.svg"></div>
         <div id="video_player_sound"><img id="img_video" src="../images/buttons/sound_button.svg"></div>
 		<div id="smile_buttons">
-			<button id="but1"><img src="../images/GOOD/1.png" height="100%" onclick="sendEmotion('GOOD')"></button>
-			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="sendEmotion('OMG')"></button>
-			<button id="but3"><img src="../images/ANGRY/1.png" height="100%" onclick="sendEmotion('ANGRY')"></button>
+			<button id="but1"><img src="../images/GOOD/1.png" height="55%" onclick="sendEmotion('GOOD')"></button>
+			<button id="but2"><img src="../images/OMG/1.png" height="55%" onclick="sendEmotion('OMG')"></button>
+			<button id="but3"><img src="../images/ANGRY/1.png" height="55%" onclick="sendEmotion('ANGRY')"></button>
 		</div>
 	</div>
 	<div id="chat_background">
@@ -454,11 +454,13 @@
         if (video.paused) 
         {
             video.play();
+            video.muted = false;
             interval = window.setInterval(myCallback, 500);
         }
         else 
         {
             video.pause();
+            video.muted = true;
             clearInterval(interval);
         }
     }

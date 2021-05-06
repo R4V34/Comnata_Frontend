@@ -3,22 +3,24 @@
 	position: absolute;
 	top: 2.5%;
 	right: 15px;
-	min-width: 200px;
-	max-width: 200px;
-	height: 50px;
-	background: #313948AA;
+	min-width: 220px;
+	max-width: 220px;
+	height: 67px;
+	background: #31394888;
 	border-radius: 12px;
 }
 
 #but1
 {
 	position: absolute;
-	height: 80%;
-	width: 21%;
+	height: 50px;
+	width: 50px;
 	left: 0%;
-	transform: translateX(50%);
+	transform: translateX(30%);
 	top: 10%;
-	background-color: #0000;
+	background: linear-gradient(316.55deg, #E5FFF2 17.8%, #FFFFFF 79.98%);
+	box-shadow: 0px 4px 15px rgba(255, 246, 94, 0.25);
+	border-radius: 50%;
 	border: 0;
 	outline: none;
 }
@@ -26,12 +28,14 @@
 #but2
 {
 	position: absolute;
-	height: 80%;
-	width: 21%;
+	height: 50px;
+	width: 50px;
 	left: 50%;
 	transform: translateX(-50%);
 	top: 10%;
-	background-color: #0000;
+	background: linear-gradient(316.55deg, #E8EAFF 15.57%, #FFFFFF 82.53%);
+	box-shadow: 0px 4px 15px rgba(72, 150, 240, 0.5);
+	border-radius: 50%;
 	border: 0;
 	outline: none;
 }
@@ -39,12 +43,14 @@
 #but3
 {
 	position: absolute;
-	height: 80%;
-	width: 21%;
+	height: 50px;
+	width: 50px;
 	right: 0%;
-	transform: translateX(-50%);
+	transform: translateX(-30%);
 	top: 10%;
-	background-color: #0000;
+	background: linear-gradient(316.55deg, #FFFFFF 12.24%, #FFFAFA 84.84%);
+	box-shadow: 0px 4px 15px rgba(255, 16, 26, 0.33);
+	border-radius: 50%;
 	border: 0;
 	outline: none;
 }
@@ -58,6 +64,7 @@
 	visibility: hidden;
 	padding: 10px;
 	border-radius: 100%;
+	outline: 0;
 	background-color: #313948;
 	-webkit-animation: img_smile_anim 6.2s;  
 	animation: img_smile_anim 6.2s; 
