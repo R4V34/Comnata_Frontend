@@ -449,18 +449,63 @@
         var chat = document.getElementById("chat_background");
         var main = document.getElementById("main");
         var video_player = document.getElementById("video_player_block");
+        var up_gr = document.getElementById("upper_gradient");
+        var dw_gr = document.getElementById("bottom_gradient");
+        var left_block = document.getElementById("video_player_left_block");
+        var polzunok = document.getElementById("video_player_polzunok_block");
+        var full_screen = document.getElementById("video_player_fullscreen");
+        var quality = document.getElementById("video_player_quality");
+        var sound = document.getElementById("video_player_sound");
+        var smile_block = document.getElementById("smile_buttons");
         if (is_fullscreen)
         {
             main.style.width = "61.9%";
             video_player.style.height = "80%";
             video_player.style.top = "10%";
+            main.style.backgroundColor = "#2B323F";
+            up_gr.style.background = "linear-gradient(to top, #000, #2B323F)";
+            dw_gr.style.background = "linear-gradient(to top, #2B323F, #000)";
+            left_block.style.bottom = "12.5%";
+            polzunok.style.bottom = "12.5%";
+            full_screen.style.bottom = "12.5%";
+            quality.style.bottom = "12.5%";
+            sound.style.bottom = "12.5%";
+            smile_block.style.top = "7%";
+            smile_block.style.backgroundColor = "#262729AA";
+
+            document.exitFullscreen()
         }
         else
         {
             main.style.width = "100%";
             video_player.style.top = "0%";
             video_player.style.height = "100%";
+            main.style.backgroundColor = "black";
+            up_gr.style.background = "linear-gradient(to top, #0000, #0000)";
+            dw_gr.style.background = "linear-gradient(to top, #0000, #0000)";
+            left_block.style.bottom = "2.5%";
+            polzunok.style.bottom = "2.5%";
+            full_screen.style.bottom = "2.5%";
+            quality.style.bottom = "2.5%";
+            sound.style.bottom = "2.5%";
+            smile_block.style.top = "2.5%";
+            smile_block.style.backgroundColor = "#313948";
+
+            var el = document.documentElement
+            var rfs = el.requestFullScreen || el.webkitRequestFullScreen || 
+                      el.mozRequestFullScreen || el.msRequestFullScreen;
+            if (typeof rfs != "undefined" && rfs) 
+            {
+                rfs.call(el);
+            }
+            else if(typeof window.ActiveXObject != "undefined")
+            {
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript != null) wscript.SendKeys("{F11}");
+            }  
         }
+
+
         is_fullscreen = !is_fullscreen;
 
     }
