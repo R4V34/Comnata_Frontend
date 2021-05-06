@@ -12,7 +12,6 @@
     	var user_id = "";
     	var user_id_float = 0.0; 
         $(document).ready(function(){
-
             connect();
             $("#chat_top_users_block").scroll(function(){
                 $("#chat_top_users_name_block").scrollLeft($("#chat_top_users_block").scrollLeft());
@@ -28,9 +27,9 @@
 		<div id="upper_name_text">Some_Funny_Name</div>
 		<iframe id="youtube_video" width="2000px" height="2000px" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 		<div id="smile_buttons">
-			<button id="but1"><img src="../images/GOOD/1.png" height="100%" onclick="createEl('GOOD')"></button>
-			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="createEl('OMG')"></button>
-			<button id="but3"><img src="../images/ANGRY/1.png" height="100%" onclick="createEl('ANGRY')"></button>
+			<button id="but1"><img src="../images/GOOD/1.png" height="100%" onclick="sendEmotion('GOOD')"></button>
+			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="sendEmotion('OMG')"></button>
+			<button id="but3"><img src="../images/ANGRY/1.png" height="100%" onclick="sendEmotion('ANGRY')"></button>
 		</div>
 	</div>
 	<div id="chat_background">
@@ -83,15 +82,23 @@
                 JSON.parse(greeting.body);
             });
 
+            stompClient.subscribe('/topic/room/123/reactions', function (greeting) {
+                var em = JSON.parse(greeting.body)["type"];
+                var sender = JSON.parse(greeting.body)["author"]; 
+                if (sender != user_id) createEmotion(em);
+            });
+
             stompClient.subscribe('/topic/room/123/chatMessages', function (greeting) {
             	var message = JSON.parse(greeting.body)["text"];
             	var sender = JSON.parse(greeting.body)["userId"]; 
-                createMessageFromServer(message, sender);
+                if (sender != user_id) createMessageFromServer(message, sender);
             });
 
             stompClient.subscribe('/topic/room/123/joins', function (greeting) {
-                JSON.parse(greeting.body);
+                console.log(JSON.parse(greeting.body));
             });
+
+            sendUser();
         });
     }
 
@@ -104,14 +111,21 @@
         console.log("Disconnected");
     }
 
+	function sendReaction(str)
+    {
+        var reac = JSON.stringify({'reaction': str});
+        stompClient.send('/app/room/123/reaction', {}, reac);
+    }
+
     function sendMessage(str)
     {
         var mes = JSON.stringify({'text': str});
         stompClient.send("/app/room/123/chatMessage", {}, mes);
     }
 
-    function sendName() {
-        stompClient.send("/app/room/123/chatMessage", {}, JSON.stringify({'text': $("#name").val()}));
+    function sendUser()
+    {
+        stompClient.send("/app/room/123/join", {}, "{}");
     }
 
     </script>
@@ -127,13 +141,20 @@
                          "sun", "tea", "toy", "zoo"];
 
             var num = [];
+
 			function deleteEl(el) {
 				var par = el.parentNode;
   				el.parentNode.removeChild(el);
   				par.parentNode.removeChild(par);
 			}
 
-            function createEl(e) {
+			function sendEmotion(e)
+			{
+				sendReaction(e);
+				createEmotion(e);
+			}
+
+            function createEmotion(e) {
             	var newEl = document.createElement("div");
             	var num = (Math.floor(Math.random() * 232) % 4 + 1).toString();
 				newEl.innerHTML = "<img id=\"img_smile\" src=\"../images/"+ e + "/" + num + ".png\">";
@@ -157,9 +178,13 @@
             {
             	var boddy3 = document.getElementById("chat_background_messages");
             	var input3 = document.getElementById("chat_input");
-                sendMessage(input3.value);
-    			input3.value = "";
-    			boddy3.scrollTop = 99999;
+                if (input3.value.length > 0)
+                {
+                	createMessageFromServer(input3.value, user_id);
+                	sendMessage(input3.value);
+    				input3.value = "";
+    				boddy3.scrollTop = 99999;
+    			}
             }
 
 
@@ -191,7 +216,6 @@
             function createUser()
             {
                 num.push(getNumber());
-
                 var newEl = document.createElement("div");
                 var newSpace = document.createElement("div");
                 var newSpace2 = document.createElement("div");
@@ -205,7 +229,6 @@
                 newEl = document.getElementsByClassName("chat_top_user")[0];
                 newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
                 boddy.prepend(newSpace, chat_input);
-
                 var newEl2 = document.createElement("div");
                 var newSpace3 = document.createElement("div");
                 var newSpace4 = document.createElement("div");
@@ -255,7 +278,6 @@
     <script>
     	function function_onload()
         {
-        	console.log(localStorage.getItem('comnata_link_youtube'));
 			var elem = document.getElementById("youtube_video");
             elem.setAttribute('src', localStorage.getItem('comnata_link_youtube'));
             document.getElementById("chat_top_input").value = getCode();

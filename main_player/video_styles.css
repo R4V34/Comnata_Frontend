@@ -1,0 +1,152 @@
+#video_player
+{
+	position: absolute;
+	height: 80%;
+	width: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#background_video_player
+{
+	position: absolute;
+	height: 80%;
+	width: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	background-color: black;
+}
+
+#video_player_left_block
+{
+	position: absolute;
+	height: 50px;
+	width: 175px;
+	bottom: 12.5%;
+	left: 15px;
+	background-color: #313948;
+	border-radius: 12px;
+}
+
+#video_player_polzunok_block
+{
+	position: absolute;
+	height: 50px;
+	width: calc(100% - 240px - 175px);
+	bottom: 12.5%;
+	left: calc(175px + 30px);
+	background-color: #313948;
+	border-radius: 12px;
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 90%; /* Full-width */
+    height: 9px; /* Specified height */
+    background: #E0E4EB; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    border-radius: 12px;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+#video_player_fullscreen
+{
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	bottom: 12.5%;
+	right: 15px;
+	background-color: #313948;
+	border: 0;
+	outline: none;
+	border-radius: 12px;
+}
+
+#video_player_quality
+{
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	bottom: 12.5%;
+	right: 80px;
+	border: 0;
+	outline: none;
+	background-color: #313948;
+	border-radius: 12px;
+}
+
+#video_player_sound
+{
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	bottom: 12.5%;
+	right: 145px;
+	border: 0;
+	outline: none;
+	background-color: #313948;
+	border-radius: 12px;
+}
+
+#img_video
+{
+	position: absolute;
+	height: 42%;
+	width: 42%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+
+}
+
+#video_player_play
+{
+	position: absolute;
+	left: 3%;
+	height: 50px;
+	width: 50px;
+	background-color: #0000;
+}
+
+#video_player_left
+{
+	position: absolute;
+	right: calc(3% + 50px);
+	height: 50px;
+	width: 50px;
+	background-color: #0000;
+}
+
+#video_player_right
+{
+	position: absolute;
+	right: 3%;
+	height: 50px;
+	width: 50px;
+	background-color: #0000;
+}

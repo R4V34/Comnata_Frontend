@@ -1,0 +1,40 @@
+#chat_background_messages
+{
+	top: 256px;
+	position: absolute;
+	width: 100%;
+	height: calc(91% - 256px);
+	background: #313948;
+	font-size: 15px;
+	overflow: auto;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#upper_gradient
+{
+	top: 10%;
+	transform: translateY(-50%);
+	width: 100%;
+	position: absolute;
+	height: 5.5%;
+	background: linear-gradient(to top, #000, #2B323F);
+}
+
+#bottom_gradient
+{
+	bottom: 10%;
+	height: 5.5%;
+	transform: translateY(50%);
+	width: 100%;
+	position: absolute;
+	background: linear-gradient(to top, #2B323F, #000);
+}
+
+#upper_name_text
+{
+	color: white;
+	position: absolute;
+	left: 4%;
+	top: 2.2%;
+	font-size: 20px;
+}

@@ -1,0 +1,82 @@
+#chat_background
+{
+	position: relative;
+	background-color: #313948;
+	height: 100%; 
+	width: 38.1%;
+    float: left;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#chat_input
+{
+	text-align: bottom;
+	position: absolute;
+	width: 86%;
+	height: 96%;
+	border: 0;
+	outline: none;
+	bottom: 0%;
+	background: #545765;
+	font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    padding-left: 17px;
+    word-wrap: break-word;
+    color: white;
+}
+
+input::placeholder {
+  color: #DEDAE8;
+}
+
+#chat_button
+{
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translate(-25%, -50%);
+	height: 50px;
+	width: 50px;
+	max-width: 19%;
+	max-height: 90%;
+	min-height: 50px;
+	min-width: 50px;
+	border: 0;
+	outline: none;
+	background: linear-gradient(316.55deg, #8F00FF 12.24%, #BD69FF 84.84%);
+	border-radius: 50%;
+}
+
+#chat_input_block
+{
+	position: absolute;
+	height: 9.1%;
+	width: 100%;
+	bottom: 0;
+	background-color: #545765;	
+}
+
+#down_line
+{
+	width: 10%;
+	height: 40%;
+	position: absolute;
+	left: 50%;
+	background-color: #FFF;
+	border-radius: 10px;
+	transform: rotate(60deg); 
+	top: 37.5%;
+}
+
+#up_line
+{
+	width: 10%;
+	height: 40%;
+	bottom: 30%;
+	position: absolute;
+	left: 50%;
+	background-color: #FFF;
+	border-radius: 10px;
+	transform: rotate(300deg); 
+	bottom: 37.5%;
+}

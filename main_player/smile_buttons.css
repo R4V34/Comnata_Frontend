@@ -1,0 +1,93 @@
+#smile_buttons
+{
+	position: absolute;
+	top: 7%;
+	right: 2%;
+	min-width: 200px;
+	max-width: 200px;
+	height: 50px;
+	background: #262729AA;
+	border-radius: 12px;
+}
+
+#but1
+{
+	position: absolute;
+	height: 80%;
+	width: 21%;
+	left: 0%;
+	transform: translateX(50%);
+	top: 10%;
+	background-color: #0000;
+	border: 0;
+	outline: none;
+}
+
+#but2
+{
+	position: absolute;
+	height: 80%;
+	width: 21%;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 10%;
+	background-color: #0000;
+	border: 0;
+	outline: none;
+}
+
+#but3
+{
+	position: absolute;
+	height: 80%;
+	width: 21%;
+	right: 0%;
+	transform: translateX(-50%);
+	top: 10%;
+	background-color: #0000;
+	border: 0;
+	outline: none;
+}
+
+#img_smile
+{
+	position: absolute;
+	height: 30px;
+	width: 30px;
+	left: 0%;
+	visibility: hidden;
+	padding: 10px;
+	border-radius: 100%;
+	background-color: #313948;
+	-webkit-animation: img_smile_anim 6.2s;  
+	animation: img_smile_anim 6.2s; 
+}
+
+@-webkit-keyframes img_smile_anim { 
+	0%{
+		top: 0px; 
+		visibility: visible;
+		 opacity: 1;
+	}
+	100% {
+		animation-timing-function: ease-in;
+		top: 1500%; 
+		opacity: 0.0;
+		visibility: visible;
+	}
+}
+
+
+@keyframes img_smile_anim {
+	0%{
+		top: 0px; 
+		visibility: visible;
+		 opacity: 1;
+	}
+	100% {
+		animation-timing-function: ease-in;
+		top: 1500%; 
+		opacity: 0.0;
+		visibility: visible;
+	}
+} 

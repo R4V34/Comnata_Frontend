@@ -3,29 +3,70 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Comnat</title>
+	<title>Comnata</title>
 	<link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="video_styles.css">
+    <link rel="stylesheet" href="smile_buttons.css">
+    <link rel="stylesheet" href="chat_input.css">
+    <link rel="stylesheet" href="chat_message.css">
+    <link rel="stylesheet" href="chat_top.css">
+    <link rel="stylesheet" href="scrollbar.css">
+    <link rel="stylesheet" href="video_main.css">
+    <script type="text/javascript" src="../jquery/jquery-1.4.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+
+    	var user_id = "";
+    	var user_id_float = 0.0;
+
+        $(document).ready(function(){
+            connect();
+            $("#chat_top_users_block").scroll(function(){
+                $("#chat_top_users_name_block").scrollLeft($("#chat_top_users_block").scrollLeft());
+            });
+        });
+    </script>
 </head>
 
 <body onload="function_onload()">
 	<div id="main">
-		<div id="upper_gradient"></div>
-		<div id="bottom_gradient"></div>
 		<div id="upper_name_text">Some_Funny_Name</div>
+        <div id="background_video_player"></div>
+        <div id="upper_gradient"></div>
+        <div id="bottom_gradient"></div>
+		<video id="video_player"></video>
+        <div id="video_player_left_block">
+            <div id="video_player_play"><img id="img_video" src="../images/buttons/play_button.svg" onclick="play()"></div>
+            <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg" onclick="changeTime(-5)"></div>
+            <div id="video_player_right"><img id="img_video" src="../images/buttons/right_button.svg" onclick="changeTime(5)"></div>
+        </div> 
+        <div id="video_player_polzunok_block">
+            <input id="video_player_polzunok" class="slider" type="range" min="0" max="1000000" value="0"  onclick="onPolzinok()" onchange="downPolzunok()">  
+        </div>
+        <div id="video_player_fullscreen"><img id="img_video" src="../images/buttons/fullscreen_button.svg"></div>
+        <div id="video_player_quality"><img id="img_video" src="../images/buttons/settings_button.svg"></div>
+        <div id="video_player_sound"><img id="img_video" src="../images/buttons/sound_button.svg"></div>
 		<div id="smile_buttons">
-			<button id="but1"><img src="../images/good/1.png" height="100%" onclick="createEl('good')"></button>
-			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="createEl('OMG')"></button>
-			<button id="but3"><img src="../images/angry/1.png" height="100%" onclick="createEl('angry')"></button>
+			<button id="but1"><img src="../images/GOOD/1.png" height="100%" onclick="sendEmotion('GOOD')"></button>
+			<button id="but2"><img src="../images/OMG/1.png" height="100%" onclick="sendEmotion('OMG')"></button>
+			<button id="but3"><img src="../images/ANGRY/1.png" height="100%" onclick="sendEmotion('ANGRY')"></button>
 		</div>
 	</div>
 	<div id="chat_background">
 		<div id="chat_background_messages"><div id="hmm"></div></div>
 		<div id="chat_top_background">
-			<div id="chat_top_background_line"></div>
+            <div id="chat_top_users_name_block"><div id="hmm3"></div></div>
+            <div id="chat_top_users_block"><div id="hmm2"></div></div>
+			<div id="chat_top_background_line_1"></div>
+            <input id="chat_top_input"></input>
+            <button id="chat_top_button" onclick="changeMenu()">Расширенные настройки</button>
+            <div id="chat_top_background_line_2"></div>
 		</div>
 		<div id="chat_input_block">
-			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="createChatMessage_Enter(event)"></input>
-			<button id="chat_button" align="right" onclick="createChatMessage()">
+			<input id="chat_input" placeholder="Напишите сообщение" onkeydown="sendChatMessage_Enter(event)"></input>
+			<button id="chat_button" align="right" onclick="sendChatMessage('asdasdas')">
 				<div id="up_line"></div>
 				<div id="down_line"></div>
 			</button>
@@ -36,27 +77,104 @@
 	<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
 
 	<script defer>
-		var conn = new WebSocket('ws://127.0.0.1:8777');
+		/*
+        var conn = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws');
 		var chat = document.getElementById("chatInput");
 		conn.onopen = function(e) {
    		 	console.log("Connection established!");
 		};
-
 		conn.onmessage = function(e) {
 			document.getElementById("chat_input").value = e.data;
 		};
+        */
 	</script>
 
+    <script>
+    let stompClient = null;
+
+    function connect() {
+        let socket = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws'); 
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            user_id = my_substring("" + frame);
+            user_id_float = toFloat(user_id);
+
+            stompClient.subscribe('/topic/room/123/actions', function (greeting) {
+                JSON.parse(greeting.body);
+            });
+
+            stompClient.subscribe('/topic/room/123/reactions', function (greeting) {
+                var em = JSON.parse(greeting.body)["type"];
+                var sender = JSON.parse(greeting.body)["author"]; 
+                if (sender != user_id) createEmotion(em);
+            });
+
+            stompClient.subscribe('/topic/room/123/chatMessages', function (greeting) {
+            	var message = JSON.parse(greeting.body)["text"];
+            	var sender = JSON.parse(greeting.body)["userId"]; 
+                if (sender != user_id) createMessageFromServer(message, sender);
+            });
+
+            stompClient.subscribe('/topic/room/123/joins', function (greeting) {
+                console.log(JSON.parse(greeting.body));
+            });
+        });
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+	function sendReaction(str)
+    {
+        var reac = JSON.stringify({'reaction': str});
+        stompClient.send('/app/room/123/reaction', {}, reac);
+    }
+
+    function sendMessage(str)
+    {
+        var mes = JSON.stringify({'text': str});
+        stompClient.send("/app/room/123/chatMessage", {}, mes);
+    }
+
+    function sendUser()
+    {
+        stompClient.send("/app/room/123/join", {}, "{}");
+    }
+
+    </script>
+
 	<script defer>
+
+            var col1 = ["#78FFB2", "#95CCFF", "#EAB2FF", "#FFE26D"];
+            var col2 = ["#16A57A" , "#0C6FCA", "#B144DB", "#FF8A00"];
+            var smiles = [":)", ":D", ":*", ":|", ":<", ":O", "В)", "O_O", "p-q", "^-^", "-_-", "+_+",
+                           "(:", "D:", "i-i"];
+            var names = ["dog", "cat", "bat", "ace", "ant", "bee", "bug", "cow", "hen", "egg", "elf", 
+                         "fox", "ham", "jar", "jam", "key", "map", "nil", "nut", "owl", "pea", "rat", 
+                         "sun", "tea", "toy", "zoo"];
+
+            var num = [];
 
 			function deleteEl(el) {
 				var par = el.parentNode;
   				el.parentNode.removeChild(el);
   				par.parentNode.removeChild(par);
-  				console.log("succses")
 			}
 
-            function createEl(e) {
+			function sendEmotion(e)
+			{
+				sendReaction(e);
+				createEmotion(e);
+			}
+
+            function createEmotion(e) {
             	var newEl = document.createElement("div");
             	var num = (Math.floor(Math.random() * 232) % 4 + 1).toString();
 				newEl.innerHTML = "<img id=\"img_smile\" src=\"../images/"+ e + "/" + num + ".png\">";
@@ -68,23 +186,44 @@
     			setTimeout(deleteEl, 6300, el); 
             }
 
-            function createChatMessage()
+            function sendChatMessage_Enter(event)
             {
-            	var input = document.getElementById("chat_input");
-            	if (input.value.length == 0) return;
+				if (event.keyCode === 13) {
+                    var input = document.getElementById("chat_input");
+					sendChatMessage();
+    			}
+            }
+
+            function sendChatMessage()
+            {
+            	var boddy3 = document.getElementById("chat_background_messages");
+            	var input3 = document.getElementById("chat_input");
+                if (input3.value.length > 0)
+                {
+                	createMessageFromServer(input3.value, user_id);
+                	sendMessage(input3.value);
+    				input3.value = "";
+    				boddy3.scrollTop = 99999;
+    			}
+            }
+
+
+            function createMessageFromServer(input_value, sender_id)
+            {
             	var newEl = document.createElement("div");
             	var newSpace = document.createElement("div");
             	var newTopSpace = document.createElement("div");
             	var newSpace2 = document.createElement("div");
             	var newTopSpace2 = document.createElement("div");
-            	if (Math.random() < 0.5)
-            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input.value + "</div></div>";
+            	if (!(user_id == sender_id))
+            		newEl.innerHTML = "<div id=\"chat_text_block_box\"><div id=\"chat_text_block\">" + input_value + "</div></div>";
 	       		else
-	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" + input.value + "</div></div>";
+	       			newEl.innerHTML = "<div id=\"chat_text_block_box\" align=\"right\"><div id=\"chat_text_block_ANOTHER\">" + input_value + "</div></div>";
             	newSpace.innerHTML = "<div id=\"space_l\"></div>";
             	newTopSpace.innerHTML = "<div id=\"space_r\"></div>";
             	newSpace2.innerHTML = "<div id=\"space_l\"></div>";
             	newTopSpace2.innerHTML = "<div id=\"space_r\"></div>";
+
             	boddy = document.getElementById("chat_background_messages");
        			chat_input = document.getElementById("hmm");
        			boddy.append(newSpace, chat_input);
@@ -92,26 +231,187 @@
     			boddy.append(newEl, chat_input);
     			boddy.append(newSpace2, chat_input);
        			boddy.append(newTopSpace2, chat_input);
-    			input.value = "";
-    			boddy.scrollTop = 99999;
             }
 
-            function createChatMessage_Enter(event)
+            function createUser()
             {
-				if (event.keyCode === 13) {
-					createChatMessage();
-    			}
+                num.push(getNumber());
+                var newEl = document.createElement("div");
+                var newSpace = document.createElement("div");
+                var newSpace2 = document.createElement("div");
+                newSpace2.innerHTML = "<div id=\"chat_top_user_space\"></div>"
+                newSpace.innerHTML = "<div id=\"chat_top_user_space\"></div>";
+                newEl.innerHTML = "<div class=\"chat_top_user\">" + getSmile() + "</div>";
+                boddy = document.getElementById("chat_top_users_block");
+                chat_input = document.getElementById("hmm2");
+                boddy.prepend(newSpace2, chat_input);
+                boddy.prepend(newEl, chat_input);
+                newEl = document.getElementsByClassName("chat_top_user")[0];
+                newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
+                boddy.prepend(newSpace, chat_input);
+                var newEl2 = document.createElement("div");
+                var newSpace3 = document.createElement("div");
+                var newSpace4 = document.createElement("div");
+                newSpace4.innerHTML = "<div id=\"chat_top_user_space\"></div>"
+                newSpace3.innerHTML = "<div id=\"chat_top_user_space\"></div>";
+                newEl2.innerHTML = "<div id=\"chat_top_user_name\">" + getName(num[num.length - 1]) + "</div>";
+                var boddy2 = document.getElementById("chat_top_users_name_block");
+                var chat_input2 = document.getElementById("hmm3");
+                boddy2.prepend(newSpace4, chat_input2);
+                boddy2.prepend(newEl2, chat_input2);
+                //newEl.style.background = "linear-gradient(135deg, " + getColors() + " 100%)";
+                boddy2.prepend(newSpace3, chat_input2);
             }
 
+            function getColors() /* ЦВЕТА ДЛЯ БЛОКА */
+            {
+                var i = Math.floor(num[num.length - 1] * col1.length);
+                return col1[i] + " 0%, " + col2[i];
+            }
+
+            function getSmile()
+            {
+                var i = Math.floor(num[num.length - 1] * smiles.length);
+                return smiles[i];
+            }
+
+            function getName(num)
+            {
+                var i = names[Math.floor(num * names.length)] + "_" +
+                        (Math.floor(num * 10)) + 
+                        (Math.floor(num * 100) % 10) +
+                        (Math.floor(num * 1000) % 10);
+                return i;
+            }
+
+            function getNumber()
+            {
+                return Math.random();
+            }
+
+            function changeMenu()
+            {
+            }
     </script>
 
     <script>
     	function function_onload()
         {
-        	
+			
+        }
+
+        function my_substring(e)
+        {
+        	var result = "";
+        	var j = e.indexOf("-name:") + 6;
+        	for (var i = 0; i < 36; i++) 
+        		result = result + e.charAt(i + j);
+        	return result;
+        }
+
+        function toFloat(str)
+        {
+        	var num = 1;
+        	for (var i = 0; i < str.length; i++) 
+        		num = (num + str.charCodeAt(i) * num) % 10000000.0 + 1;
+        	return num / 10000000.0;
+        }
+
+        function getCode()
+        {
+            if (true) /* Проверяем, заходит или создаёт комнату */
+            {
+                /* Получаем новый код при запуске комнаты*/
+                return "aG3Jhd2o";
+            }
+            else
+            {
+                /* Получаем код при заходе в существующиую комнату */
+            }
         }
     </script>	
-	<!-- !!!!!!!!!!!!!!!!!!!!!! <div id="chat_text_block"><div id="triangle"></div>chatblock</div>	-->
+
+
+
+
+
+
+
+    <script>
+    var video = null;
+    var hls = new Hls();
+    var link = "https://b483c7c6e0ef.ngrok.io/video/getVideo/e33c416fc49b4f4abee94c9dd6b3e457/video.m3u8";
+    var interval = null;
+    var on_polzunok = false;
+    var now_polzinok = 0;
+
+    if (Hls.isSupported()) {
+        video = document.getElementById('video_player');
+
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            console.log('video and hls.js are now bound together !');
+            hls.loadSource(link);
+            hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                console.log('manifest loaded, found ' + data.levels.length + ' quality level');
+            });
+        });
+    }
+
+    function myCallback() {
+        var line = document.getElementById("video_player_polzunok");
+        line.setAttribute('value', Math.floor(video.currentTime / video.duration * 1000000));
+    } 
+
+    function onPolzinok()
+    {
+        if (!on_polzunok)
+        {
+            var line = document.getElementById("video_player_polzunok");
+            clearInterval(interval);
+            on_polzunok = true;
+        }
+    }
+
+    function downPolzunok()
+    {
+        var line = document.getElementById("video_player_polzunok");
+        on_polzunok = false;
+        video.currentTime = (video.duration) * (line.value / 1000000.0);
+        interval = window.setInterval(myCallback, 200);
+    }
+
+
+    function changeTime(sec)
+    {
+        var line = document.getElementById("video_player_polzunok");
+        var num = Math.floor(sec / video.duration * 1000000);
+        line.setAttribute('value', parseInt(line.getAttribute('value')) + num);
+        console.log(line);
+        video.currentTime = Math.max(Math.min(video.currentTime + sec, video.duration), 0);
+    }
+
+    function play()
+    {
+        if (video.paused) 
+        {
+            video.play();
+            interval = window.setInterval(myCallback, 200);
+        }
+        else 
+        {
+            video.pause();
+            clearInterval(interval);
+        }
+    }
+    </script>
+
+
+
+
+
+
+
 	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>

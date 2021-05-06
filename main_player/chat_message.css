@@ -1,0 +1,60 @@
+#chat_text_block_box
+{
+	position: relative;
+	width: 100%;
+	background-color: #313948;
+}
+
+#chat_text_block
+{
+	word-wrap: break-word;
+	border-radius: 4px 20px 20px 20px;
+	background-color: #4896F0;
+	display: inline-block;
+	max-width: 70%;
+	height: auto;
+	transform: translateX(10px);
+	white-space: pre-wrap;
+	padding-left: 17px;
+	padding-right: 14px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	color: #FFF;
+}
+
+#chat_text_block_ANOTHER
+{
+	word-wrap: break-word;
+	position: relative;	
+	display: inline-block;
+	background-color: #11D26A;
+	transform: translateX(-10px);
+	max-width: 70%;
+	height: auto;
+	white-space: pre-wrap;
+	border-radius: 20px 4px 20px 20px;
+	padding-left: 17px;
+	padding-right: 14px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	color: #FFF;
+}
+
+
+#space_r
+{
+	position: relative;
+	float: right;
+	width: 50%;
+	height: 6px;
+	background-color: #313948;
+}
+
+#space_l
+{
+	position: relative;
+	float: left;
+	width: 50%;
+	height: 6px;
+	background-color: #313948;
+}
