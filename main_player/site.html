@@ -37,7 +37,7 @@
         <div id="background_video_player"></div>
         <div id="upper_gradient"></div>
         <div id="bottom_gradient"></div>
-		<div id="video_player_block"><video canplay="sendVideoActionReady()" loop muted="muted" id="video_player"></video></div>
+		<div id="video_player_block"><video canplay="sendVideoActionReady()" loop id="video_player"></video></div>
         <div id="video_player_left_block">
             <div id="video_player_play"><img id="img_video" src="../images/buttons/play_button.svg"><div id="action_button" onclick="playing()"></div></div>
             <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg"><div id="action_button" onclick="changeTime(-5)"></div></div>
@@ -327,11 +327,11 @@
                         var par2 = arr2[i].parentNode;
                         arr2[i].parentNode.removeChild(arr2[i]);
                         par2.parentNode.removeChild(par2);
-                        var space_par = space_arr[i].parentNode;
+                        var space_par = space_arr[i + 1].parentNode;
                         space_par.parentNode.removeChild(space_par);
                         var space_par2 = space_arr2[i].parentNode;
                         space_par2.parentNode.removeChild(space_par2);
-                        var space_par3 = space_arr[i].parentNode;
+                        var space_par3 = space_arr[i + 1].parentNode;
                         space_par3.parentNode.removeChild(space_par3);
                         var space_par4 = space_arr2[i].parentNode;
                         space_par4.parentNode.removeChild(space_par4);
@@ -489,13 +489,11 @@
         if (video.paused) 
         {
             video.play();
-            video.muted = false;
             interval = window.setInterval(myCallback, 500);
         }
         else 
         {
             video.pause();
-            video.muted = true;
             clearInterval(interval);
         }
     }
