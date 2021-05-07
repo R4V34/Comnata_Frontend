@@ -3,13 +3,13 @@
 {
 	position: fixed;
     text-align: center;
-    width: 133px;
-    height: 18px;
+    width: 183px;
+    height: 26px;
 	bottom: 0; left: 0;
 	resize: none;
 	padding-bottom: 1%;
     color: #545765;
-    font-size: 20px;
+    font-size: auto;
     font-family: 'Montserrat', sans-serif;
     width: 100%; 
 	outline: none;
@@ -19,8 +19,8 @@
 {
 	outline: none;
 	font-size: 12px;
-	width: 149px;
-	height: 51px;
+	width: 200px;
+	height: 60px;
 	position: absolute;
 	font-family: 'Montserrat', sans-serif;
 	color: #fff;
@@ -28,8 +28,42 @@
 	border-radius: 14px;
 	border: 0;
 	left: 50%;
-	top: 59.45%;
+	top: 35%;
 	transform: translateX(-50%);
+	max-width: 80%;
+	min-height: 20%;
+	max-height: 20%;
+	text-align: center;
+	display: table-cell;
+    vertical-align: middle;
+}
+
+#button_load_text
+{
+	position: absolute;
+	font-family: 'Montserrat', sans-serif;
+	color: #fff;
+	outline: none;
+	border: 0;
+	left: 50%;
+	top: 50%;
+	width: 100%;
+	transform: translate(-50%, -50%);
+}
+
+#download_label
+{
+	
+	position: absolute;
+	font-family: 'Montserrat', sans-serif;
+	background-color: #04AA6D00;
+	text-align: center;
+	display: table-cell;
+    vertical-align: middle;
+	transition: height 0.175s cubic-bezier(0, 0, 0.15, 1);
+	width: 200px;
+	height: 60px;
+	border-radius: 14px;
 }
 
 #button_load:active 
@@ -45,7 +79,7 @@
 	left: 0;
 	right: 0;
 	margin: 0 auto;
-	top: 54.629%;
+	top: 23%;
 	transform: translate(0, -50%);
 	font-family: 'Montserrat', sans-serif;
 	color: #fff;
@@ -62,8 +96,8 @@
 	white-space: nowrap;
 	position: absolute;
 	left: 50%;
-	top: 45.5%;
-	transform: translate(-50%,-50%);
+	transform: translateX(-50%);
+	top: 0%;
 	width: 694px;
 	background: linear-gradient(to top, #434553
 , #333642);
@@ -73,6 +107,58 @@
 	color: #8D9299;
 	border: 0;
 	border-radius: 8px;
+	max-width: 110%;
 }
 
+#start_button
+{
+	outline: none;
+	font-size: 12px;
+	width: 200px;
+	height: 60px;
+	position: absolute;
+	font-family: 'Montserrat', sans-serif;
+	color: #fff;
+	background: linear-gradient(to top, #737786, #4A4D65);
+	border-radius: 14px;
+	border: 0;
+	left: 50%;
+	top: 80%;
+	transform: translateX(-50%);
+	max-width: 80%;
+	min-height: 20%;
+	max-height: 20%;
+	text-align: center;
+	display: table-cell;
+    vertical-align: middle;
+}
 
+#start_button:active 
+{
+  background: linear-gradient(to top, #4A4D65, #737786);
+  transition: background 0s;
+}
+
+#main_area
+{
+	background-color: #0000;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 30%;
+	height: 300px;
+	width: 80%;
+}
+
+#line_
+{
+	position: absolute;
+	background-color: #4A4D65;
+	height: 4px;
+	width: 100%;
+	top: 67%;
+	max-width: 694px;
+	border-radius: 12px;
+	left:50%;
+	transform: translateX(-50%);
+}

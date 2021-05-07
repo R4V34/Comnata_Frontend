@@ -18,6 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         var vidos = "d36ae04abe074ebebd8629de70628812";
+        var path = "https://8962cea9de76.ngrok.io/";
     	var user_id = "";
     	var user_id_float = 0.0;
 
@@ -36,7 +37,7 @@
         <div id="background_video_player"></div>
         <div id="upper_gradient"></div>
         <div id="bottom_gradient"></div>
-		<div id="video_player_block"><video loop muted="muted" id="video_player"></video></div>
+		<div id="video_player_block"><video canplay="sendVideoActionReady()" loop muted="muted" id="video_player"></video></div>
         <div id="video_player_left_block">
             <div id="video_player_play"><img id="img_video" src="../images/buttons/play_button.svg"><div id="action_button" onclick="playing()"></div></div>
             <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg"><div id="action_button" onclick="changeTime(-5)"></div></div>
@@ -78,9 +79,10 @@
 
     <script>
     let stompClient = null;
+    var id_of_action = -1;
 
     function connect() {
-        let socket = new SockJS('https://b483c7c6e0ef.ngrok.io/main/ws'); 
+        let socket = new SockJS(path + 'main/ws'); 
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             user_id = my_substring("" + frame);
@@ -89,10 +91,25 @@
 
             stompClient.subscribe('/topic/room/' + vidos + '/videoActions', function (greeting) {
                 var t = JSON.parse(greeting.body)["type"];
-                if (t == "RESUME")
-                    playing_func();
-                if (t == "SEEK")
-                    changePolsunok(JSON.parse(greeting.body)["seekTime"])
+                var step = JSON.parse(greeting.body)["step"];
+                id_of_action = JSON.parse(greeting.body)["actionId"];
+                if (step == "READY")
+                {
+                    if (t == "RESUME")
+                    {
+                        playing_func();
+                    }
+                    if (t == "SEEK")
+                    {
+                        try_play();
+                        id_of_action = -1;
+                    }   
+                }
+                if (step == "CHECK") 
+                {
+                    id_of_action = JSON.parse(greeting.body)["actionId"];
+                    changePolsunok(JSON.parse(greeting.body)["seekTime"]);
+                }
             });
 
             stompClient.subscribe('/topic/room/' + vidos + '/reactions', function (greeting) {
@@ -152,11 +169,22 @@
         stompClient.send("/app/room/" + vidos + "/join", {}, "{}");
     }
 
+    function sendVideoActionReady()
+    {
+        if (id_of_action > 0)
+        {
+            var mes = JSON.stringify({'actionId' : id_of_action});
+            stompClient.send("/app/room/" + vidos + "/videoActionReady", {}, mes);
+        }
+    }
+
     function sendAction(sec, str)
     {
         var act = JSON.stringify({'seekTime' : sec, "type" : str});
         stompClient.send("/app/room/" + vidos + "/videoAction", {}, act);
     }
+
+
     </script>
 
 	<script defer>
@@ -390,11 +418,12 @@
     <script>
     var video = null;
     var hls = new Hls();
-    var link = "https://b483c7c6e0ef.ngrok.io/video/getVideo/d36ae04abe074ebebd8629de70628812/video.m3u8";
+    var link = path + "video/getVideo/d36ae04abe074ebebd8629de70628812/video.m3u8";
     var interval = null;
     var on_polzunok = false;
     var now_polzinok = 0;
     var is_fullscreen = false;
+    var is_playing = false;
 
     if (Hls.isSupported()) {
         video = document.getElementById('video_player');
@@ -405,6 +434,10 @@
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
             });
         });
+
+    video.oncanplay = (event) => {
+        sendVideoActionReady();
+    };
     }
 
     function myCallback() 
@@ -427,16 +460,18 @@
     {
         var line = document.getElementById("video_player_polzunok");
         on_polzunok = false;
-        sendAction(video.duration * line.value / 1000000.0, "SEEK");
+        var num = video.duration * line.value / 1000000.0;
+        sendAction(num, "SEEK");
         if (!video.paused) interval = window.setInterval(myCallback, 500);
     }
 
     function changePolsunok(sec)
     {
+        is_playing = !video.paused;
         var line = document.getElementById("video_player_polzunok");
         video.currentTime = sec;
         line.value = sec / video.duration * 1000000;
-
+        video.pause();
     }
 
     function changeTime(sec)
@@ -462,6 +497,14 @@
             video.pause();
             video.muted = true;
             clearInterval(interval);
+        }
+    }
+
+    function try_play()
+    {
+        if (is_playing)
+        {
+            video.play();
         }
     }
 
