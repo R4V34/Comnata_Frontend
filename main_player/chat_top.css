@@ -38,7 +38,7 @@
 	height: 25%;
 	width: 45%;
 	outline: none;
-	font-size: 15px;
+	font-size: auto;
     font-family: 'Montserrat', sans-serif;
     padding-left: 13px;
     padding-right: 13px;

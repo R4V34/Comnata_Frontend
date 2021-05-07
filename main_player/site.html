@@ -24,6 +24,7 @@
 
         $(document).ready(function(){
             connect();
+            document.getElementById("chat_top_input").value = vidos;
             $("#chat_top_users_block").scroll(function(){
                 $("#chat_top_users_name_block").scrollLeft($("#chat_top_users_block").scrollLeft());
             });
@@ -391,18 +392,6 @@
         	return num / 1000000000.0;
         }
 
-        function getCode()
-        {
-            if (true) /* Проверяем, заходит или создаёт комнату */
-            {
-                /* Получаем новый код при запуске комнаты*/
-                return "aG3Jhd2o";
-            }
-            else
-            {
-                /* Получаем код при заходе в существующиую комнату */
-            }
-        }
     </script>	
 
     <script>
