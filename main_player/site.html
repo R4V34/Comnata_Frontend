@@ -102,7 +102,6 @@
                     if (t == "SEEK")
                     {
                         try_play();
-                        id_of_action = -1;
                     }   
                 }
                 if (step == "CHECK") 
@@ -171,11 +170,8 @@
 
     function sendVideoActionReady()
     {
-        if (id_of_action > 0)
-        {
-            var mes = JSON.stringify({'actionId' : id_of_action});
-            stompClient.send("/app/room/" + vidos + "/videoActionReady", {}, mes);
-        }
+        var mes = JSON.stringify({'actionId' : id_of_action});
+        stompClient.send("/app/room/" + vidos + "/videoActionReady", {}, mes);
     }
 
     function sendAction(sec, str)
@@ -573,12 +569,6 @@
 
     }
     </script>
-
-
-
-
-
-
 
 	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
