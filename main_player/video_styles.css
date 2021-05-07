@@ -22,7 +22,7 @@
 	position: absolute;
 	height: 50px;
 	width: 175px;
-	bottom: 12.5%;
+	bottom: 11.5%;
 	left: 15px;
 	background-color: #313948;
 	border-radius: 12px;
@@ -33,7 +33,7 @@
 	position: absolute;
 	height: 50px;
 	width: calc(100% - 240px - 175px);
-	bottom: 12.5%;
+	bottom: 11.5%;
 	left: calc(175px + 30px);
 	background-color: #313948;
 	border-radius: 12px;
@@ -56,7 +56,7 @@
 	position: absolute;
 	height: 50px;
 	width: 50px;
-	bottom: 12.5%;
+	bottom: 11.5%;
 	right: 15px;
 	background-color: #313948;
 	border: 0;
@@ -69,7 +69,7 @@
 	position: absolute;
 	height: 50px;
 	width: 50px;
-	bottom: 12.5%;
+	bottom: 11.5%;
 	right: 80px;
 	border: 0;
 	outline: none;
@@ -82,7 +82,7 @@
 	position: absolute;
 	height: 50px;
 	width: 50px;
-	bottom: 12.5%;
+	bottom: 11.5%;
 	right: 145px;
 	border: 0;
 	outline: none;
@@ -137,4 +137,32 @@
 	outline: none;
 	background-color: #0000;
 	border-radius: 12px;
+}
+
+#sound_block
+{
+	position: absolute;
+	height: 200px;
+	width: 50px;
+	bottom: calc(11.5% + 60px);
+	right: 145px;
+	border: 0;
+	outline: none;
+	background-color: #313948;
+	border-radius: 12px;
+	transition: height 0.3s linear;
+}
+
+#label
+{
+	height: 100%;
+	width: 100%;
+	background-color: #0000;
+	border-radius: 12px;
+	outline: 0;
+	border: 0;
+}
+
+button:active + #label, input:checked + #label {
+    height: 100px;    
 }
