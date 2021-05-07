@@ -405,12 +405,10 @@
         }
     </script>	
 
-
-
     <script>
     var video = null;
     var hls = new Hls();
-    var link = path + localStorage.getItem("videoUrl");
+    var link = path + "/video/getVideo/" +  localStorage.getItem("link") + "/video.m3u8";
     var interval = null;
     var on_polzunok = false;
     var now_polzinok = 0;

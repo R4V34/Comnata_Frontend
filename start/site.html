@@ -27,7 +27,7 @@
             <div id="button_load_text">LET'S COMNATA</div>
             <label for="ok_boss" id="download_label"></label>
         </div>
-	    <input id="textarea" placeholder="Введите ссылку..." rows="1"></input>
+	    <input id="textarea" placeholder="Введите ссылку или код доступа..." rows="1" onchange="tryStartRoom()"></input>
         <div id="line_"></div>
 	</div>
     <h1 id="bottom_text">COMNATA</h1>
@@ -92,6 +92,11 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "https://8962cea9de76.ngrok.io/video/upload");
                     xhr.send(formData);
+                }
+                else
+                {
+                    localStorage.setItem('link', link);
+                    document.location = '../main_player/site.html';
                 }
             }
 
