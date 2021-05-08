@@ -96,6 +96,11 @@
     let stompClient = null;
     var id_of_action = "";
 
+    var loc = window.location.href + '';
+        if (loc.indexOf('http://') == 0){
+            window.location.href = loc.replace('http://','https://');
+        }
+
     function connect() {
         let socket = new SockJS(path + '/main/ws'); 
         stompClient = Stomp.over(socket);

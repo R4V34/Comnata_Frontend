@@ -57,6 +57,11 @@
 ;
 //{"status":"SUCCESS","videoId":"68665525b9f24209b607b18863e62d21","videoUrl":"/video/getVideo/68665525b9f24209b607b18863e62d21/video.m3u8"}
 
+		var loc = window.location.href + '';
+        if (loc.indexOf('http://') == 0){
+            window.location.href = loc.replace('http://','https://');
+        }
+
             var video_length = 0; 
             function downloadFile()
             {
