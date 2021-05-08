@@ -45,7 +45,7 @@
 
     <!-- button_.innerHTML -->
 	<script>
-            var global_link = "";
+            var global_link = "https://e5969482adea.ngrok.io/video/upload";
 
             $('#myForm').ajaxForm({
                 url : global_link,
@@ -82,9 +82,8 @@
                 {
                     var formData = new FormData();
                     formData.set("video", input.files[0], input.files[0].name);
-                    global_link = "https://e5969482adea.ngrok.io/video/upload";
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "https://e5969482adea.ngrok.io/video/upload");
+                    xhr.open("POST", global_link);
                     xhr.send();
                 }
                 else
@@ -92,7 +91,12 @@
                     console.log("code");
                     let xhr = new XMLHttpRequest();
                     global_link = 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link;
-                    xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link);
+                    xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link, true);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState !== 4) return;
+                        if (this.status === 200) { alert(this.responseText);
+                        } else { /* server returned an error. Do something with it or ignore it */ }
+                    };
                     xhr.send();
                 }
             }
