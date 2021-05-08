@@ -87,8 +87,10 @@
                 xhr.onreadystatechange = function() {
                     if (this.readyState !== 4) return;
                     if (this.status === 200) { 
-                        localStorage.setItem("link", link);
-                        document.location = '../main_player/';
+                        if (this.responseText == "true"){
+                            localStorage.setItem("link", link);
+                            document.location = '../main_player/';
+                        }
                     } else { /* server returned an error. Do something with it or ignore it */ }
                 };
                 xhr.send();
