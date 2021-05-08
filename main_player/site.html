@@ -101,11 +101,11 @@
                 {
                     if (t == "RESUME")
                     {
-                        playing_func();
+                        playing_func(JSON.parse(greeting.body)["seekTime"]);
                     }
                     if (t == "SEEK")
                     {
-                        try_play();
+                        try_play(JSON.parse(greeting.body)["seekTime"]);
                     }   
                 }
                 if (step == "CHECK") 
@@ -477,10 +477,11 @@
         sendAction(video.currentTime, "RESUME");
     }
 
-    function playing_func()
+    function playing_func(sec)
     {
         if (video.paused) 
         {
+            video.currentTime = parseFloat(sec);
             video.play();
             interval = window.setInterval(myCallback, 500);
         }
@@ -491,10 +492,11 @@
         }
     }
 
-    function try_play()
+    function try_play(sec)
     {
         if (is_playing)
         {
+            video.currentTime = parseFloat(sec);
             video.play();
         }
     }
