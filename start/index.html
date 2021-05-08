@@ -32,10 +32,9 @@
             </div>
         </div>
         <div id="start_button">
-            <div id="button_load_text">LET'S COMNATA</div>
-            <label for="ok_boss" id="download_label"></label>
+            <div id="button_load_text_2" onclick="tryStartRoom()">LET'S COMNATA</div>
         </div>
-	    <input id="textarea" placeholder="Введите код доступа..." rows="1" onchange="tryStartRoom()"></input>
+	    <input id="textarea" placeholder="Введите код доступа..." rows="1"></input>
         <div id="line_"></div>
 	</div>
     <h1 id="bottom_text">COMNATA</h1>
@@ -46,21 +45,19 @@
 
     <!-- button_.innerHTML -->
 	<script>
-        $('#myForm').ajaxForm({
-            url : "https://e5969482adea.ngrok.io/video/upload",
-            success : function (response) {
-                localStorage.setItem("link", response["videoId"]);
-                localStorage.setItem("videoUrl", response["videoUrl"]);
-                document.location = '../main_player/';
-            }
-        })
-;
-//{"status":"SUCCESS","videoId":"68665525b9f24209b607b18863e62d21","videoUrl":"/video/getVideo/68665525b9f24209b607b18863e62d21/video.m3u8"}
+            $('#myForm').ajaxForm({
+                url : "https://e5969482adea.ngrok.io/video/upload",
+                success : function (response) {
+                    localStorage.setItem("link", response["videoId"]);
+                    localStorage.setItem("videoUrl", response["videoUrl"]);
+                    document.location = '../main_player/';
+                }
+            });
 
-		var loc = window.location.href + '';
-        if (loc.indexOf('http://') == 0){
-            window.location.href = loc.replace('http://','https://');
-        }
+		    var loc = window.location.href + '';
+            if (loc.indexOf('http://') == 0){
+                window.location.href = loc.replace('http://','https://');
+            }
 
             var video_length = 0; 
             function downloadFile()
@@ -68,11 +65,8 @@
                 var input = document.getElementById("input__file");
                 var textarea = document.getElementById("textarea");
                 if (input.files.length > 0){
-                    var but = document.getElementById("start_button");
                     video_length = input.files[0].size;
-                    but.style.display = "inline-table";
                     textarea.value = input.files[0].name;
-                    console.log(video_length);
                 }
             }
 
@@ -82,29 +76,26 @@
                 var link = document.getElementById("textarea").value;
                 var input = document.getElementById("input__file");
                 var textarea = document.getElementById("textarea");
-                if (link.indexOf("youtube.com/watch") != -1)
+                if (link.indexOf(".mp4") != -1)
                 {
-                    localStorage.setItem('comnata_link_youtube', rightLink('v=', link));
-                    document.location = '../youtube_player/';
-                }
-                else if (link.indexOf("https://www.youtube.com/embed") == 0)
-                {
-                    localStorage.setItem('comnata_link_youtube', link);
-                    document.location = '../youtube_player/';
-                }
-                else if (link.indexOf("youtu.be") != -1)
-                {
-                    localStorage.setItem('comnata_link_youtube', rightLink('e/', link));
-                    document.location = '../youtube_player/';
-                }
-                else if (input.files.length > 0)
-                {
+                    console.log("VIDOS");
                     var formData = new FormData();
                     formData.set("video", input.files[0], input.files[0].name);
                     console.log(formData);
                     var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "https://8962cea9de76.ngrok.io/video/upload");
-                    xhr.send(formData);
+                    xhr.open("POST", "https://e5969482adea.ngrok.io/video/upload");
+                    xhr.send();
+                }
+                else
+                {
+                    console.log("code");
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link);
+                    xhr.send();
+                    xhr.onload = function() {
+                        let responseObj = xhr.response;
+                        alert(responseObj); 
+                    };
                 }
             }
 

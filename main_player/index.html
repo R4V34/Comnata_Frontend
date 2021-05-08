@@ -471,6 +471,14 @@
         var num = video.duration * line.value / 1000000.0;
         sendAction(num, "SEEK");
         if (!video.paused) interval = window.setInterval(myCallback, 500);
+        changePauseButton();
+    }
+
+    function changePauseButton()
+    {
+        var img = document.getElementById("img_video");
+        if (video.paused) img.setAttribute("src", "../images/buttons/pause_batya.png"); 
+        else              img.setAttribute("src", "../images/buttons/play_button.svg");
     }
 
     function changePolsunok(sec)
@@ -480,6 +488,7 @@
         video.currentTime = sec;
         line.value = sec / video.duration * 1000000;
         video.pause();
+        changePauseButton();
     }
 
     function changeTime(sec)
@@ -505,6 +514,7 @@
             video.pause();
             clearInterval(interval);
         }
+        changePauseButton();
     }
 
     function try_play(sec)
