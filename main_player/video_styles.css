@@ -98,6 +98,10 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
 
 }
 
@@ -144,12 +148,12 @@ input[type="button"]:checked {
 }
 
 #vranger {
-	opacity: 1;
+	opacity: 0;
 	display: inline-table;
 	position: absolute;
-	width: 170px;
-	left: -62px;
-	bottom: 48.2%;
+	width: 0px;
+	left: 23px;
+	bottom: 36.2%;
    	transform: rotate(270deg);
   	-moz-transform: rotate(270deg);
   	-webkit-transition: 0.42s ease-in-out;
@@ -161,7 +165,7 @@ input[type="button"]:checked {
 #sound_block
 {
 	position: absolute;
-	height: 200px;
+	height:0px;
 	width: 50px;
 	bottom: calc(11.5% + 60px);
 	right: 145px;
@@ -176,14 +180,14 @@ input[type="button"]:checked {
 }
 
 #sound_block.transparent {
-	height:0px;
+	height: 200px;
 }
 
 #vranger.transparent {
-	width: 0px;
-	opacity: 0;
-	left: 23px;
-	bottom: 36.2%;
+	width: 170px;
+	opacity: 1;
+	left: -62px;
+	bottom: 48.2%;
 }
 
 input[type=range]

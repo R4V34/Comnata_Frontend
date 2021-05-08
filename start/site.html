@@ -10,7 +10,7 @@
 </head>
 
 <body bgcolor="#262c38">
-    <form id="myForm" action="https://8962cea9de76.ngrok.io/video/upload" enctype="multipart/form-data" method="POST">
+    <form id="myForm" action="https://e5969482adea.ngrok.io/video/upload" enctype="multipart/form-data" method="POST">
         <input id="input__file" name="file" type="file" hidden onchange="downloadFile()">
         <input id="ok_boss" type="submit" hidden>
     </form>
@@ -42,7 +42,7 @@
 	<script>
     $('#myForm')
     .ajaxForm({
-        url : "https://8962cea9de76.ngrok.io/video/upload",
+        url : "https://e5969482adea.ngrok.io/video/upload",
         success : function (response) {
             localStorage.setItem("link", response["videoId"]);
             localStorage.setItem("videoUrl", response["videoUrl"]);

@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         var vidos = localStorage.getItem("link");
-        var path = "https://8962cea9de76.ngrok.io";
+        var path = "https://e5969482adea.ngrok.io";
     	var user_id = "";
     	var user_id_float = 0.0;
 
@@ -457,6 +457,7 @@
 
     function playing_func()
     {
+        var vid = document.getElementById("video_player");
         if (video.paused) 
         {
             video.play();

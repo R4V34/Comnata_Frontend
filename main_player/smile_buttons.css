@@ -23,6 +23,10 @@
 	border-radius: 50%;
 	border: 0;
 	outline: none;
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
 }
 
 #but2
@@ -38,6 +42,10 @@
 	border-radius: 50%;
 	border: 0;
 	outline: none;
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
 }
 
 #but3
@@ -53,6 +61,10 @@
 	border-radius: 50%;
 	border: 0;
 	outline: none;
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
 }
 
 #img_smile
@@ -68,6 +80,10 @@
 	background-color: #313948;
 	-webkit-animation: img_smile_anim 6.2s;  
 	animation: img_smile_anim 6.2s; 
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;
 }
 
 @-webkit-keyframes img_smile_anim { 
