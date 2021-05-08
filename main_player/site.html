@@ -44,7 +44,7 @@
             <div id="video_player_left"><img id="img_video" src="../images/buttons/left_button.svg"><div id="action_button" onclick="changeTime(-5)"></div></div>
             <div id="video_player_right"><img id="img_video" src="../images/buttons/right_button.svg"><div id="action_button" onclick="changeTime(5)"></div></div>
         </div> 
-        <div id="sound_block"><input type="range" id="vranger"/></div>
+        <div id="sound_block"><input onchange="changeSound()" oninput="changeSound()" type="range" id="vranger" value="100"/></div>
         <div id="video_player_polzunok_block">
             <input id="video_player_polzunok" class="slider" type="range" min="0" max="1000000" value="0" oninput="onPolzunok()" onchange="downPolzunok()" >  
         </div>
@@ -83,6 +83,7 @@
 
     <script>
     let stompClient = null;
+    var id_of_action = "";
 
     function connect() {
         let socket = new SockJS(path + '/main/ws'); 
@@ -95,15 +96,25 @@
             stompClient.subscribe('/topic/room/' + vidos + '/videoActions', function (greeting) {
                 var t = JSON.parse(greeting.body)["type"];
                 var step = JSON.parse(greeting.body)["step"];
-                if (t == "RESUME")
+                id_of_action = JSON.parse(greeting.body)["actionId"];
+                if (step == "READY")
                 {
-                    playing_func();
+                    if (t == "RESUME")
+                    {
+                        playing_func();
+                    }
+                    if (t == "SEEK")
+                    {
+                        try_play();
+                    }   
                 }
-                if (t == "SEEK")
+                if (step == "CHECK") 
                 {
+                    id_of_action = JSON.parse(greeting.body)["actionId"];
                     changePolsunok(JSON.parse(greeting.body)["seekTime"]);
-                }  
+                }
             });
+
 
             stompClient.subscribe('/topic/room/' + vidos + '/reactions', function (greeting) {
                 var em = JSON.parse(greeting.body)["type"];
@@ -155,6 +166,12 @@
     {
         var mes = JSON.stringify({'text': str});
         stompClient.send("/app/room/" + vidos + "/chatMessage", {}, mes);
+    }
+
+    function sendVideoActionReady()
+    {
+        var mes = JSON.stringify({'actionId' : id_of_action});
+        stompClient.send("/app/room/" + vidos + "/videoActionReady", {}, mes);
     }
 
     function sendUser()
@@ -410,6 +427,10 @@
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
             });
         });
+
+    video.oncanplay = (event) => {
+        sendVideoActionReady();
+    };
     }
 
     function myCallback() 
@@ -443,6 +464,7 @@
         var line = document.getElementById("video_player_polzunok");
         video.currentTime = sec;
         line.value = sec / video.duration * 1000000;
+        video.pause();
     }
 
     function changeTime(sec)
@@ -457,7 +479,6 @@
 
     function playing_func()
     {
-        var vid = document.getElementById("video_player");
         if (video.paused) 
         {
             video.play();
@@ -468,6 +489,21 @@
             video.pause();
             clearInterval(interval);
         }
+    }
+
+    function try_play()
+    {
+        if (is_playing)
+        {
+            video.play();
+        }
+    }
+
+    function changeSound()
+    {
+        var vid = document.getElementById("video_player");
+        var polz = document.getElementById("vranger");
+        vid.volume = parseFloat(polz.value) / 100.0;
     }
 
     function fullScreen()

@@ -146,6 +146,7 @@
 	left: 50%;
 	transform: translateX(-50%);
 	top: 30%;
+	bottom: 300px;
 	height: 300px;
 	width: 80%;
 }
