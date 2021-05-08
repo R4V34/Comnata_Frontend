@@ -7,6 +7,14 @@
 	<link rel="stylesheet" href="main.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
+
+    <script>
+    	var loc = window.location.href + '';
+		if (loc.indexOf('http://') == 0){
+    		window.location.href = loc.replace('http://','https://');
+		}
+    </script>
+    
 </head>
 
 <body bgcolor="#262c38">
@@ -27,7 +35,7 @@
             <div id="button_load_text">LET'S COMNATA</div>
             <label for="ok_boss" id="download_label"></label>
         </div>
-	    <input id="textarea" placeholder="Введите ссылку или код доступа..." rows="1" onchange="tryStartRoom()"></input>
+	    <input id="textarea" placeholder="Введите код доступа..." rows="1" onchange="tryStartRoom()"></input>
         <div id="line_"></div>
 	</div>
     <h1 id="bottom_text">COMNATA</h1>

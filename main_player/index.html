@@ -21,6 +21,11 @@
         var path = "https://e5969482adea.ngrok.io";
     	var user_id = "";
     	var user_id_float = 0.0;
+        
+        var loc = window.location.href + '';
+        if (loc.indexOf('http://') == 0){
+            window.location.href = loc.replace('http://','https://');
+        }
 
         $(document).ready(function(){
             connect();
