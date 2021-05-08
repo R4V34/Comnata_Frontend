@@ -33,6 +33,7 @@
         </div>
         <div id="start_button">
             <div id="button_load_text_2" onclick="tryStartRoom()">LET'S COMNATA</div>
+            <label for="ok_boss" id="download_label" onclick="tryStartRoom()"></label>
         </div>
 	    <input id="textarea" placeholder="Введите код доступа..." rows="1"></input>
         <div id="line_"></div>
@@ -47,14 +48,16 @@
 	<script>
             var global_link = "https://e5969482adea.ngrok.io/video/upload";
 
+
             $('#myForm').ajaxForm({
                 url : global_link,
                 success : function (response) {
+                    console.log("vidos");
                     localStorage.setItem("link", response["videoId"]);
                     localStorage.setItem("videoUrl", response["videoUrl"]);
                     document.location = '../main_player/';
                 }
-            });
+            }); 
 
 		    var loc = window.location.href + '';
             if (loc.indexOf('http://') == 0){
@@ -78,28 +81,16 @@
                 var link = document.getElementById("textarea").value;
                 var input = document.getElementById("input__file");
                 var textarea = document.getElementById("textarea");
-                if (link.indexOf(".mp4") != -1)
-                {
-                    var formData = new FormData();
-                    formData.set("video", input.files[0]);
-                    
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", global_link);
-                    xhr.send(formData);
-                }
-                else
-                {
-                    console.log("code");
-                    let xhr = new XMLHttpRequest();
-                    global_link = 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link;
-                    xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link, true);
-                    xhr.onreadystatechange = function() {
-                        if (this.readyState !== 4) return;
-                        if (this.status === 200) { alert(this.responseText);
-                        } else { /* server returned an error. Do something with it or ignore it */ }
-                    };
-                    xhr.send();
-                }
+
+                console.log("code");
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link, true);
+                xhr.onreadystatechange = function() {
+                    if (this.readyState !== 4) return;
+                    if (this.status === 200) { alert(this.responseText);
+                    } else { /* server returned an error. Do something with it or ignore it */ }
+                };
+                xhr.send();
             }
 
             function rightLink(e, link)
