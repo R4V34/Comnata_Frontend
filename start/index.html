@@ -46,7 +46,7 @@
         success : function (response) {
             localStorage.setItem("link", response["videoId"]);
             localStorage.setItem("videoUrl", response["videoUrl"]);
-            document.location = '../main_player/site.html';
+            document.location = '../main_player/index.html';
         }
     })
 ;
@@ -74,15 +74,15 @@
                 var textarea = document.getElementById("textarea");
                 if (link.indexOf("youtube.com/watch") != -1){
                     localStorage.setItem('comnata_link_youtube', rightLink('v=', link));
-                    document.location = '../youtube_player/site.html';
+                    document.location = '../youtube_player/index.html';
                 }
                 else if (link.indexOf("https://www.youtube.com/embed") == 0){
                     localStorage.setItem('comnata_link_youtube', link);
-                    document.location = '../youtube_player/site.html';
+                    document.location = '../youtube_player/index.html';
                 }
                 else if (link.indexOf("youtu.be") != -1){
                     localStorage.setItem('comnata_link_youtube', rightLink('e/', link));
-                    document.location = '../youtube_player/site.html';
+                    document.location = '../youtube_player/index.html';
                 }
                 else if (input.files.length > 0)
                 {
@@ -96,7 +96,7 @@
                 else
                 {
                     localStorage.setItem('link', link);
-                    document.location = '../main_player/site.html';
+                    document.location = '../main_player/index.html';
                 }
             }
 

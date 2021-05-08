@@ -45,14 +45,20 @@
             <div id="video_player_right"><img id="img_video" src="../images/buttons/right_button.svg"><div id="action_button" onclick="changeTime(5)"></div></div>
         </div> 
         <div id="sound_block"><input onchange="changeSound()" oninput="changeSound()" type="range" id="vranger" value="100"/></div>
+        <div id="quality_block">
+            <div class="button_quality" onclick="changeQu('1080')">1080p</div>
+            <div class="button_quality" onclick="changeQu('720')">720p</div>
+            <div class="button_quality" onclick="changeQu('480')">480p</div>
+            <div class="button_quality" onclick="changeQu('360')">360p</div>
+            <div class="button_quality" onclick="changeQu('240')">240p</div>
+            <div class="button_quality" onclick="changeQu('AUTO')">AUTO</div>
+        </div>
         <div id="video_player_polzunok_block">
             <input id="video_player_polzunok" class="slider" type="range" min="0" max="1000000" value="0" oninput="onPolzunok()" onchange="downPolzunok()" >  
         </div>
         <div id="video_player_fullscreen"><img id="img_video" src="../images/buttons/fullscreen_button.svg"><div id="action_button" onclick="fullScreen()"></div></div>
-        <div id="video_player_quality"><img id="img_video" src="../images/buttons/settings_button.svg"></div>
-        <div id="video_player_sound" onclick="sound_block_animation()">
-            <img id="img_video" src="../images/buttons/sound_button.svg">
-        </div>
+        <div id="video_player_quality" onclick="qu_block_animation()"><img id="img_video" src="../images/buttons/settings_button.svg"></div>
+        <div id="video_player_sound" onclick="sound_block_animation()"><img id="img_video" src="../images/buttons/sound_button.svg"></div>
 		<div id="smile_buttons">
 			<button id="but1" onclick="sendEmotion('GOOD')"><img src="../images/GOOD/1.png" height="55%"></button>
 			<button id="but2" onclick="sendEmotion('OMG')"><img src="../images/OMG/1.png" height="55%"></button>
@@ -352,7 +358,6 @@
                 var g = arr[(pointer % 1000 + 2) % 3];
                 var b = arr[(pointer % 1000 + 3) % 3];
 
-                console.log((pointer + 1) % 3);
                 return "rgb("+ r +", "+ g +", "+ b +")";
             }
 
@@ -425,9 +430,9 @@
         hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             hls.loadSource(link);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                changeQuBlock();
             });
         });
-
     video.oncanplay = (event) => {
         sendVideoActionReady();
     };
@@ -508,6 +513,34 @@
         vid.volume = parseFloat(polz.value) / 100.0;
     }
 
+    function changeQuBlock()
+    {
+        console.log(hls.levels.length);
+        for (var i = 5; i > hls.levels.length; i--)
+        {
+            var elem = document.getElementsByClassName("button_quality")[0];
+            elem.parentNode.removeChild(elem);
+        }
+
+        for (var i = hls.levels.length; i > -1; i--)
+        {
+            var elem = document.getElementsByClassName("button_quality")[i];
+            elem.style.height = (100.0 / (hls.levels.length + 1)) + "%";
+            console.log(elem.style.height);
+        }
+        
+    }
+
+    function changeQu(e)
+    {
+        if      (e == "240") hls.nextLevel = 0;
+        else if (e == "360") hls.nextLevel = 1;
+        else if (e == "480") hls.nextLevel = 2;
+        else if (e == "720") hls.nextLevel = 3;
+        else if (e == "1080") hls.nextLevel = 4;
+        else if (e == "AUTO") hls.nextLevel = -1;
+    }
+
     function fullScreen()
     {
         var chat = document.getElementById("chat_background");
@@ -522,6 +555,7 @@
         var sound = document.getElementById("video_player_sound");
         var smile_block = document.getElementById("smile_buttons");
         var sound_block = document.getElementById("sound_block");
+        var quality_block = document.getElementById("quality_block");
         if (is_fullscreen)
         {
             main.style.width = "61.9%";
@@ -538,6 +572,7 @@
             smile_block.style.top = "2.5%";
             smile_block.style.backgroundColor = "#313948";
             sound_block.style.bottom = "calc(11.5% + 60px)";
+            quality_block.style.bottom = "calc(11.5% + 60px)";
             document.exitFullscreen()
         }
         else
@@ -556,6 +591,7 @@
             smile_block.style.top = "2.5%";
             smile_block.style.backgroundColor = "#313948";
             sound_block.style.bottom = "calc(2.5% + 60px)";
+            quality_block.style.bottom = "calc(2.5% + 60px)";
 
             var el = document.documentElement
             var rfs = el.requestFullScreen || el.webkitRequestFullScreen || 
@@ -577,6 +613,15 @@
     {
         document.getElementById("sound_block").classList.toggle("transparent");
         document.getElementById("vranger").classList.toggle("transparent");
+    }
+
+    function qu_block_animation()
+    {
+        console.log("trap" + ((hls.levels.length + 1) * 50));
+        document.getElementById("quality_block").classList.toggle("trap" + ((hls.levels.length + 1) * 50));
+        for (var i = 0; i < hls.levels.length; i++)
+            document.getElementsByClassName("button_quality")[i].classList.toggle("trap");
+        document.getElementsByClassName("button_quality")[hls.levels.length].classList.toggle("trap");
     }
     </script>
 
