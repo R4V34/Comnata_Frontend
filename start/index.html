@@ -81,10 +81,11 @@
                 if (link.indexOf(".mp4") != -1)
                 {
                     var formData = new FormData();
-                    formData.set("video", input.files[0], input.files[0].name);
+                    formData.set("video", input.files[0]);
+                    
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", global_link);
-                    xhr.send();
+                    xhr.send(formData);
                 }
                 else
                 {
