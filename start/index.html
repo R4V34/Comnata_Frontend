@@ -54,7 +54,6 @@
                 success : function (response) {
                     console.log("vidos");
                     localStorage.setItem("link", response["videoId"]);
-                    localStorage.setItem("videoUrl", response["videoUrl"]);
                     document.location = '../main_player/';
                 }
             }); 
@@ -87,7 +86,9 @@
                 xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link, true);
                 xhr.onreadystatechange = function() {
                     if (this.readyState !== 4) return;
-                    if (this.status === 200) { alert(this.responseText);
+                    if (this.status === 200) { 
+                        localStorage.setItem("link", link);
+                        document.location = '../main_player/';
                     } else { /* server returned an error. Do something with it or ignore it */ }
                 };
                 xhr.send();
