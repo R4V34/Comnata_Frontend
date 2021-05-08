@@ -82,15 +82,18 @@
                 var link = document.getElementById("textarea").value;
                 var input = document.getElementById("input__file");
                 var textarea = document.getElementById("textarea");
-                if (link.indexOf("youtube.com/watch") != -1){
+                if (link.indexOf("youtube.com/watch") != -1)
+                {
                     localStorage.setItem('comnata_link_youtube', rightLink('v=', link));
                     document.location = '../youtube_player/';
                 }
-                else if (link.indexOf("https://www.youtube.com/embed") == 0){
+                else if (link.indexOf("https://www.youtube.com/embed") == 0)
+                {
                     localStorage.setItem('comnata_link_youtube', link);
                     document.location = '../youtube_player/';
                 }
-                else if (link.indexOf("youtu.be") != -1){
+                else if (link.indexOf("youtu.be") != -1)
+                {
                     localStorage.setItem('comnata_link_youtube', rightLink('e/', link));
                     document.location = '../youtube_player/';
                 }
@@ -102,11 +105,6 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "https://8962cea9de76.ngrok.io/video/upload");
                     xhr.send(formData);
-                }
-                else if
-                {
-                    localStorage.setItem('link', link);
-                    document.location = '../main_player/';
                 }
             }
 
