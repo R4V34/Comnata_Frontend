@@ -112,7 +112,7 @@
 
 #start_button
 {
-	display: none;
+	display: inline-table;
 	outline: none;
 	font-size: 12px;
 	width: 200px;
