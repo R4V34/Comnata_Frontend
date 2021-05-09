@@ -3,10 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="icon" href="../images/icon/favicon.ico?v=1.1">
+	<link rel="icon"  href="../images/favicon.ico" type="image/x-icon">
 	<title>Comnata</title>
 	<link rel="stylesheet" href="main.css">
-    <script src="../jquery/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
 
     <script>
     	var loc = window.location.href + '';
@@ -18,8 +19,8 @@
 </head>
 
 <body bgcolor="#262c38">
-    <form id="data" method="post" enctype="multipart/form-data">
-        <input id="input__file" name="file" type="file" hidden onchange="downloadFile()">
+    <form id="myForm" action="https://f03b035c98db.ngrok.io/video/upload" enctype="multipart/form-data" method="POST">
+        <input id="input__file" name="file" type="file" onchange="downloadFile()" hidden>
         <input id="ok_boss" type="submit" hidden>
     </form>
 
@@ -46,15 +47,16 @@
 
     <!-- button_.innerHTML -->
 	<script>
-            var global_link = "https://e5969482adea.ngrok.io/video/upload";
+            var global_link = "https://f03b035c98db.ngrok.io/video/upload";
 
             $('#myForm').ajaxForm({
-                url : global_link,
-                success : function (response) {
-                    localStorage.setItem("link", response["videoId"]);
-                    document.location = '../main_player/';
-                }
-            }); 
+        		url : "https://f03b035c98db.ngrok.io/video/upload",
+        		success : function (response) 
+        		{
+            		localStorage.setItem("link", response["videoId"]);
+            		document.location = '../main_player/index.html';
+        		}
+    		});
 
 		    var loc = window.location.href + '';
             if (loc.indexOf('http://') == 0){
@@ -79,15 +81,14 @@
                 var input = document.getElementById("input__file");
                 var textarea = document.getElementById("textarea");
 
-                console.log("code");
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://e5969482adea.ngrok.io/main/isRoomExist?roomName=' + link, true);
+                xhr.open('GET', 'https://f03b035c98db.ngrok.io/main/isRoomExist?roomName=' + link, true);
                 xhr.onreadystatechange = function() {
                     if (this.readyState !== 4) return;
                     if (this.status === 200) { 
                         if (this.responseText == "true"){
                             localStorage.setItem("link", link);
-                            document.location = '../main_player/';
+                            document.location = '../main_player/index.html';
                         }
                     } else { /* server returned an error. Do something with it or ignore it */ }
                 };
