@@ -1,5 +1,7 @@
 #chat_background_messages
 {
+	display: flex;
+    flex-direction: column-reverse;
 	top: 256px;
 	position: absolute;
 	width: 100%;

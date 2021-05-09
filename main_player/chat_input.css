@@ -1,5 +1,6 @@
 #chat_background
 {
+	display: table;
 	position: relative;
 	background-color: #313948;
 	height: 100%; 

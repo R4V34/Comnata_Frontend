@@ -49,15 +49,64 @@
             var global_link = "https://e5969482adea.ngrok.io/video/upload";
 
 
+            $('#myForm').submit(function(event)
+            {
+    			event.preventDefault();
+    			var formData = new FormData($(this)[0]);
+    			$.ajax(
+    			{
+       		 		type: 'POST',
+        			url: global_link,
+        			data: formData,
+        			processData: false,
+            		contentType: false,
+        			enctype: 'multipart/form-data',
+
+        			beforeSend: function(XMLHttpRequest)
+        			{
+           				XMLHttpRequest.upload.addEventListener("progress", function(evt)
+           				{
+                			if (evt.lengthComputable) 
+                			{  
+                   				var percentComplete = evt.loaded / evt.total;
+                    			console.log(percentComplete);
+                			}
+            			}, false);
+        			},
+
+        			success: function (returndata) 
+        			{
+            			alert(returndata);
+        			}
+
+   				});
+			});
+
+/*
+
             $('#myForm').ajaxForm({
                 url : global_link,
                 success : function (response) {
-                    console.log("vidos");
                     localStorage.setItem("link", response["videoId"]);
                     document.location = '../main_player/';
                 }
+                $.ajax({
+       		 		type: 'POST',
+        			url: 'http://192.168.0.102:8080/upload',
+        			data: formData,
+        			enctype: 'multipart/form-data',
+        			beforeSend: function(XMLHttpRequest)
+        			{
+            			XMLHttpRequest.upload.addEventListener("progress", function(evt){
+                		if (evt.lengthComputable) {  
+                    		var percentComplete = evt.loaded / evt.total;
+                    		$("#progress").text(Math.floor(complete*100)+"%");
+                		}
+            		}, false);
+        		},
             }); 
 
+*/
 		    var loc = window.location.href + '';
             if (loc.indexOf('http://') == 0){
                 window.location.href = loc.replace('http://','https://');
