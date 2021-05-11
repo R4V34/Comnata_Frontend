@@ -36,9 +36,9 @@
 	bottom: 26%;
 	left: 2.2222222%;
 	height: 25%;
-	width: 45%;
+	width: 80%;
 	outline: none;
-	font-size: auto;
+	font-size: 30px;
     font-family: 'Montserrat', sans-serif;
     padding-left: 13px;
     padding-right: 13px;
@@ -56,16 +56,26 @@
 	bottom: 26%;
 	right: 2.2222222%;
 	height: 25%;
-	width: 45%;
+	width: 12%;
 	background: linear-gradient(180deg, #747786 0%, #4A4D65 100%);
 	border: 0;
 	outline: none;
-	font-size: 15px;
     font-family: 'Montserrat', sans-serif;
-    padding-left: 13px;
-    padding-right: 13px;
     border-radius: 12px;
     color: #E0E4EB;
+}
+
+#animation_chat_top_button
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #0000;
+	border-radius: 12px;
+}
+
+#animation_chat_top_button:hover {
+  	background: linear-gradient(180deg, #74778699 0%, #4A4D6599 100%);
 }
 
 #chat_top_users_block
@@ -147,4 +157,8 @@
 	height: 85px;
 	width: 2.5px;
 	background-color: #313948;
+}
+
+#action_button:hover {
+  	background-color: #31394899;
 }

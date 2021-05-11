@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         var vidos = localStorage.getItem("link");
-        var path = "https://f03b035c98db.ngrok.io";
+        var path = "https://" + localStorage.getItem('linkNGROK') + ".ngrok.io";
     	var user_id = "";
     	var user_id_float = 0.0;
         
@@ -77,8 +77,11 @@
             <div id="chat_top_users_name_block"><div id="hmm3"></div></div>
             <div id="chat_top_users_block"><div id="hmm2"></div></div>
 			<div id="chat_top_background_line_1"></div>
-            <input id="chat_top_input"></input>
-            <button id="chat_top_button" onclick="changeMenu()">Расширенные настройки</button>
+            <input id="chat_top_input" readonly></input>
+            <div id="chat_top_button">
+                <img id="img_video" src="../images/buttons/copy_button.svg">
+                <div id="animation_chat_top_button" onclick="copy_in_byf()"></div>
+            </div>
             <div id="chat_top_background_line_2"></div>
 		</div>
 		<div id="chat_input_block">
@@ -478,8 +481,8 @@
     function changePauseButton()
     {
         var img = document.getElementById("img_video");
-        if (video.paused) img.setAttribute("src", "../images/buttons/pause_batya.png"); 
-        else              img.setAttribute("src", "../images/buttons/play_button.svg");
+        if (video.paused) img.setAttribute("src", "../images/buttons/play_button.svg"); 
+        else              img.setAttribute("src", "../images/buttons/pause_batya.png");
     }
 
     function changePolsunok(sec)
@@ -644,6 +647,16 @@
             document.getElementsByClassName("button_quality")[i].classList.toggle("trap");
         document.getElementsByClassName("button_quality")[hls.levels.length].classList.toggle("trap");
     }
+
+    function copy_in_byf()
+    {
+        var copyText = document.getElementById("chat_top_input");
+        copyText.select();
+        document.execCommand("copy");
+        if (window.getSelection) window.getSelection().removeAllRanges();
+        else document.selection.empty();
+    }
+
     </script>
 </body>
 </html>

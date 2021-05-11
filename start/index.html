@@ -11,6 +11,8 @@
 
     <script>
     	var loc = window.location.href + '';
+		var linkNGROK = "f03b035c98db";
+		localStorage.setItem('linkNGROK', linkNGROK);
 		if (loc.indexOf('http://') == 0){
     		window.location.href = loc.replace('http://','https://');
 		}
@@ -47,10 +49,10 @@
 
     <!-- button_.innerHTML -->
 	<script>
-            var global_link = "https://f03b035c98db.ngrok.io/video/upload";
+            var global_link = "https://" + linkNGROK + ".ngrok.io/video/upload";
 
             $('#myForm').ajaxForm({
-        		url : "https://f03b035c98db.ngrok.io/video/upload",
+        		url : "https://" + linkNGROK + ".ngrok.io/video/upload",
         		success : function (response) 
         		{
             		localStorage.setItem("link", response["videoId"]);
@@ -82,7 +84,7 @@
                 var textarea = document.getElementById("textarea");
 
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET', 'https://f03b035c98db.ngrok.io/main/isRoomExist?roomName=' + link, true);
+                xhr.open('GET', 'https://' + linkNGROK + '.ngrok.io/main/isRoomExist?roomName=' + link, true);
                 xhr.onreadystatechange = function() {
                     if (this.readyState !== 4) return;
                     if (this.status === 200) { 
@@ -108,6 +110,12 @@
             	return 'https://www.youtube.com/embed/' + rigth_link;
             }
 
+            function banana(now_link)
+            {
+            	linkNGROK = now_link;
+            	localStorage.setItem('linkNGROK', now_link);
+            	console.log('OK. Now link of ngrok: https://' + linkNGROK + ".ngrok.io/video/upload")
+            }
     </script>
 </body>
 </html>
