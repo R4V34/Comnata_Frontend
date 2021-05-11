@@ -49,10 +49,7 @@
 
     <!-- button_.innerHTML -->
 	<script>
-            var global_link = "https://" + linkNGROK + ".ngrok.io/video/upload";
-
             $('#myForm').ajaxForm({
-        		url : "https://" + linkNGROK + ".ngrok.io/video/upload",
         		success : function (response) 
         		{
             		localStorage.setItem("link", response["videoId"]);
@@ -114,7 +111,10 @@
             {
             	linkNGROK = now_link;
             	localStorage.setItem('linkNGROK', now_link);
-            	console.log('OK. Now link of ngrok: https://' + linkNGROK + ".ngrok.io/video/upload")
+            	document.getElementById("myForm").setAttribute("action", 'https://' + linkNGROK + ".ngrok.io/video/upload");
+            	return ('OK. Now link of ngrok: ' + 
+            		    document.getElementById("myForm").getAttribute("action"));
+
             }
     </script>
 </body>
